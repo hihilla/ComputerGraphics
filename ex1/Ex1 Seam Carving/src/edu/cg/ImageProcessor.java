@@ -106,7 +106,7 @@ public class ImageProcessor extends FunctioalForEachLoops {
         if (inWidth <=1 || inHeight <=1) {
             // TODO throw exeption
             logger.log("Image is too small for calculating gradient magnitude.");
-            return newEmptyInputSizedImage();
+            throw new RuntimeException("Image is too small for calculating gradient magnitude.");
         }
 
         BufferedImage greyImage = greyscale();
