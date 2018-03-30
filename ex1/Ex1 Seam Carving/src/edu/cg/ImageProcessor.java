@@ -40,7 +40,7 @@ public class ImageProcessor extends FunctioalForEachLoops {
 	
 	//MARK: Change picture hue - example
 	public BufferedImage changeHue() {
-		logger.log("Prepareing for hue changing...");
+		logger.log("Preparing for hue changing...");
 		
 		int r = rgbWeights.redWeight;
 		int g = rgbWeights.greenWeight;
@@ -66,11 +66,42 @@ public class ImageProcessor extends FunctioalForEachLoops {
 	
 	//MARK: Unimplemented methods
 	public BufferedImage greyscale() {
-		//TODO: Implement this method, remove the exception.
-		throw new UnimplementedMethodException("greyscale");
+		logger.log("Preparing for Greyscale: changing...");
+
+		int r = rgbWeights.redWeight;
+		int g = rgbWeights.greenWeight;
+		int b = rgbWeights.blueWeight;
+		int amount = rgbWeights.weightsAmount;
+
+		BufferedImage ans = newEmptyInputSizedImage();
+
+		forEach((y, x) -> {
+			Color c = new Color(workingImage.getRGB(x, y));
+			int red = r*c.getRed();
+			int green = g*c.getGreen();
+			int blue = b*c.getBlue();
+			int greyColor = (red + green + blue) / amount;
+			Color color = new Color(greyColor, greyColor, greyColor);
+			ans.setRGB(x, y, color.getRGB());
+		});
+
+		logger.log("Changing Greyscale: done!");
+
+		return ans;
 	}
 
+	/**
+	 * gradient magnitude = sqrt((dx^2 + dy^2) / 2.0)
+	 * dx = current pixel - next horizontal pixel
+	 * dy = current pixel - next vertical pixel
+	 * in borders: Take the previous pixel instead of the next one
+	 * If the image dimensions are too small, throw an appropriate exception.
+	 * The gradient magnitude is based on the grey scaled image by using the given RGB weights.
+	 * @return the resulted image
+	 */
 	public BufferedImage gradientMagnitude() {
+		BufferedImage greyImage = greyscale();
+
 		//TODO: Implement this method, remove the exception.
 		throw new UnimplementedMethodException("gradientMagnitude");
 	}
