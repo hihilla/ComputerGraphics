@@ -66,7 +66,7 @@ public class ImageProcessor extends FunctioalForEachLoops {
 	
 	//MARK: Unimplemented methods
 	public BufferedImage greyscale() {
-		logger.log("Preparing for Greyscale: changing...");
+		logger.log("creates a greyscale image.");
 
 		int r = rgbWeights.redWeight;
 		int g = rgbWeights.greenWeight;
@@ -85,7 +85,7 @@ public class ImageProcessor extends FunctioalForEachLoops {
 			ans.setRGB(x, y, color.getRGB());
 		});
 
-		logger.log("Changing Greyscale: done!");
+		logger.log("Changing Greyscale done!");
 
 		return ans;
 	}
@@ -99,12 +99,51 @@ public class ImageProcessor extends FunctioalForEachLoops {
 	 * The gradient magnitude is based on the grey scaled image by using the given RGB weights.
 	 * @return the resulted image
 	 */
-	public BufferedImage gradientMagnitude() {
-		BufferedImage greyImage = greyscale();
+    public BufferedImage gradientMagnitude() {
+        logger.log("Preparing for Gradient magnitude changing...");
 
-		//TODO: Implement this method, remove the exception.
-		throw new UnimplementedMethodException("gradientMagnitude");
-	}
+        // check for size:
+        if (inWidth <=1 || inHeight <=1) {
+            // TODO throw exeption
+            logger.log("Image is too small for calculating gradient magnitude.");
+            return newEmptyInputSizedImage();
+        }
+
+        BufferedImage greyImage = greyscale();
+        BufferedImage ans = newEmptyInputSizedImage();
+
+        forEach((y, x) -> {
+            Color current = new Color(greyImage.getRGB(x, y));
+            Color nextHorizontal;
+            Color nextVertical;
+
+            if (x + 1 == inWidth) {
+                // next horizontal is out of bound
+                nextHorizontal = new Color(greyImage.getRGB(x - 1, y));
+            } else {
+                nextHorizontal = new Color(greyImage.getRGB(x + 1, y));
+            }
+
+            if (y + 1 == inHeight) {
+                // next vertical is out of bound
+                nextVertical = new Color(greyImage.getRGB(x, y - 1));
+            } else {
+                nextVertical = new Color(greyImage.getRGB(x, y + 1));
+            }
+
+            // since its greyscale, all components of color has same value
+            int dx = current.getBlue() - nextHorizontal.getBlue();
+            int dy = current.getBlue() - nextVertical.getBlue();
+
+            int gradientMagnitude = (int) Math.sqrt((dx * dx + dy * dy) / 2.0);
+            Color color = new Color(gradientMagnitude, gradientMagnitude, gradientMagnitude);
+            ans.setRGB(x, y, color.getRGB());
+        });
+
+        logger.log("Changing Gradient magnitude done!");
+
+        return ans;
+    }
 	
 	public BufferedImage nearestNeighbor() {
 		//TODO: Implement this method, remove the exception.
