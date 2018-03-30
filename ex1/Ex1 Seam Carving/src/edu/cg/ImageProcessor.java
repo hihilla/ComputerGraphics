@@ -80,12 +80,10 @@ public class ImageProcessor extends FunctioalForEachLoops {
 			int red = r*c.getRed();
 			int green = g*c.getGreen();
 			int blue = b*c.getBlue();
-			int greyColor = (red + green + blue) / amount;
+			int greyColor = (int) ((red + green + blue) / (double) amount);
 			Color color = new Color(greyColor, greyColor, greyColor);
 			ans.setRGB(x, y, color.getRGB());
 		});
-
-		logger.log("Changing Greyscale done!");
 
 		return ans;
 	}
@@ -140,14 +138,25 @@ public class ImageProcessor extends FunctioalForEachLoops {
             ans.setRGB(x, y, color.getRGB());
         });
 
-        logger.log("Changing Gradient magnitude done!");
-
         return ans;
     }
 	
 	public BufferedImage nearestNeighbor() {
-		//TODO: Implement this method, remove the exception.
-		throw new UnimplementedMethodException("nearestNeighbor");
+        logger.log("Preparing for Nearest neighbor changing...");
+
+        BufferedImage ans = newEmptyOutputSizedImage();
+        double xFactor = (double) outWidth / inWidth;
+        double yFactor = (double) outHeight / inHeight;
+
+        setForEachOutputParameters();
+        forEach((y,x) -> {
+            int inX = (int) (x / xFactor);
+            int inY = (int) (y / yFactor);
+            ans.setRGB(x, y, workingImage.getRGB(inX, inY));
+        });
+        setForEachInputParameters();
+
+        return ans;
 	}
 	
 	public BufferedImage bilinear() {
