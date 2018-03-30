@@ -140,7 +140,12 @@ public class ImageProcessor extends FunctioalForEachLoops {
 
         return ans;
     }
-	
+
+    /**
+     * Each new sized image pixel's color will be taken from the nearest appropriate pixel in the original image.
+     * Each image has different dimensions.
+     * @return scaled image
+     */
 	public BufferedImage nearestNeighbor() {
         logger.log("Preparing for Nearest neighbor changing...");
 
@@ -158,7 +163,12 @@ public class ImageProcessor extends FunctioalForEachLoops {
 
         return ans;
 	}
-	
+
+    /**
+     * Each new sized image pixel's color will be calculated as a bilinear interpolation by using the four closest
+     * surrounding pixels of the original image. Each image has different dimensions.
+     * @return scaled image
+     */
 	public BufferedImage bilinear() {
 		//TODO: Implement this method, remove the exception.
 		throw new UnimplementedMethodException("bilinear");
