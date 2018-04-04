@@ -97,7 +97,7 @@ public class ImageProcessor extends FunctioalForEachLoops {
         int amount = rgbWeights.weightsAmount;
 
         BufferedImage ans = newEmptyImage(img.getWidth(), img.getHeight());
-
+        setForEachParameters(img.getWidth(), img.getHeight());
         forEach((y, x) -> {
             Color c = new Color(img.getRGB(x, y));
             int red = r * c.getRed();
@@ -107,7 +107,7 @@ public class ImageProcessor extends FunctioalForEachLoops {
             Color color = new Color(greyColor, greyColor, greyColor);
             ans.setRGB(x, y, color.getRGB());
         });
-
+        setForEachInputParameters();
         return ans;
     }
 
