@@ -90,6 +90,27 @@ public class ImageProcessor extends FunctioalForEachLoops {
         return ans;
     }
 
+    public BufferedImage greyscale(BufferedImage img) {
+        int r = rgbWeights.redWeight;
+        int g = rgbWeights.greenWeight;
+        int b = rgbWeights.blueWeight;
+        int amount = rgbWeights.weightsAmount;
+
+        BufferedImage ans = newEmptyImage(img.getWidth(), img.getHeight());
+
+        forEach((y, x) -> {
+            Color c = new Color(img.getRGB(x, y));
+            int red = r * c.getRed();
+            int green = g * c.getGreen();
+            int blue = b * c.getBlue();
+            int greyColor = (int) ((red + green + blue) / (double) amount);
+            Color color = new Color(greyColor, greyColor, greyColor);
+            ans.setRGB(x, y, color.getRGB());
+        });
+
+        return ans;
+    }
+
     /**
      * gradient magnitude = sqrt((dx^2 + dy^2) / 2.0)
      * dx = current pixel - next horizontal pixel
