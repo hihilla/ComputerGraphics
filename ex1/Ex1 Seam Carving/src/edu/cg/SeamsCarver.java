@@ -14,7 +14,6 @@ public class SeamsCarver extends ImageProcessor {
     //MARK: Fields
     private int numOfSeams;
     private ResizeOperation resizeOp;
-    private int maxX;
 
     //TODO: Add some additional fields:
 
@@ -41,7 +40,6 @@ public class SeamsCarver extends ImageProcessor {
             resizeOp = this::duplicateWorkingImage;
 
         //TODO: Initialize your additional fields and apply some preliminary calculations:
-        maxX = inWidth - 1;
     }
 
     //MARK: Methods
