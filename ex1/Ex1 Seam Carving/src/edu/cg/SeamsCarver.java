@@ -14,6 +14,7 @@ public class SeamsCarver extends ImageProcessor {
     //MARK: Fields
     private int numOfSeams;
     private ResizeOperation resizeOp;
+    private int[][] stepCounter; // how many steps pixel was moved to the LEFT
 
     //TODO: Add some additional fields:
 
@@ -40,6 +41,11 @@ public class SeamsCarver extends ImageProcessor {
             resizeOp = this::duplicateWorkingImage;
 
         //TODO: Initialize your additional fields and apply some preliminary calculations:
+        stepCounter = new int[inHeight][inWidth];
+        forEach((y, x) -> {
+//            int[] indices = {x, y};
+            stepCounter[y][x] = 0;
+        });
     }
 
     //MARK: Methods
@@ -71,14 +77,41 @@ public class SeamsCarver extends ImageProcessor {
 
     public BufferedImage showSeams(int seamColorRGB) {
         int[][] seams = getAllSeams();
+        int[][] origSeams = getOriginalSeams(seams);
         BufferedImage outImg = duplicateWorkingImage();
+        System.out.println("we have it");
         setForEachParameters(inHeight, numOfSeams);
         forEach((i, y) -> {
-            int x = seams[i][y];
+            System.out.println(i);
+            int x = origSeams[i][y];
             outImg.setRGB(x, y, seamColorRGB);
         });
         setForEachInputParameters();
         return outImg;
+    }
+
+    private int[][] getOriginalSeams(int[][] seams) {
+        System.out.println(numOfSeams);
+        int[][] origSeams = new int[numOfSeams][inHeight];
+        // must start with the last seam that was removed
+        for (int i = numOfSeams - 1; i >= 0; i--) {
+            System.out.println(i);
+            int[] seam = seams[i];
+            int[] origXs = new int[seam.length];
+            for (int y = 0; y < inHeight; y++) {
+                int x = seam[y];
+                System.out.println("x is... " + x);
+                int origX = x + stepCounter[y][x] - 1;
+                // update stepCounter:
+                for(int j = x; j < inWidth; i++) {
+                    stepCounter[y][j]--;
+                }
+                origXs[y] = origX;
+            }
+            origSeams[i] = origXs;
+        }
+
+        return origSeams;
     }
 
     private int[][] getAllSeams() {
@@ -91,15 +124,14 @@ public class SeamsCarver extends ImageProcessor {
             // find the end of the seam: index of the minimum cost at the bottom row
             int minIndex = getMinIndex(cost[inHeight - 1]);
             seams[i] = getSeam(cost, pixelEnergy, greyImg, minIndex);
-            // update somewhere that this seam shouldn't be used
-            updatePixelEnergyFor(seams[i], pixelEnergy);
+            // remove seam and mark it
+            outImg = removeSeamFrom(outImg, seams[i]);
         }
 
         return seams;
     }
 
     private long[][] calcCostMatrix(BufferedImage greyImg, int[][] pixelEnergy) {
-        System.out.println("cost matrix");
         int height = greyImg.getHeight();
         int width = greyImg.getWidth();
         long[][] cost = new long[height][width];
@@ -128,7 +160,6 @@ public class SeamsCarver extends ImageProcessor {
     }
 
     private int[][] calcPixelEnergy(BufferedImage greyImg) {
-        System.out.println("pixel energy");
         int height = greyImg.getHeight();
         int width = greyImg.getWidth();
         int[][] pEnergy = new int[height][width];
@@ -206,12 +237,10 @@ public class SeamsCarver extends ImageProcessor {
                 minIndex = i;
             }
         }
-        System.out.println("min index has val " + minValue);
         return minIndex;
     }
 
     private int[] getSeam(long[][] cost, int[][] pixelEnergy, BufferedImage greyImg, int minIndex) {
-        System.out.println("get seam");
         int[] seam = new int[inHeight];
         int j = minIndex;
         seam[inHeight - 1] = j;
@@ -240,6 +269,9 @@ public class SeamsCarver extends ImageProcessor {
             } else {
                 // right to the seam. copy shift pixel.
                 outImg.setRGB(x, y, img.getRGB(x + 1, y));
+                // update indices
+//                int[] indices = {x + 1, y};
+                stepCounter[y][x + 1]++;
             }
         });
         setForEachInputParameters();
@@ -247,7 +279,6 @@ public class SeamsCarver extends ImageProcessor {
     }
 
     private void updatePixelEnergyFor(int[] seam, int[][] pixelEnergy) {
-        System.out.println("update pixel energy");
         for (int i = 0; i < seam.length; i++) {
             int j = seam[i];
             pixelEnergy[i][j] = 10000;//Integer.MAX_VALUE;
