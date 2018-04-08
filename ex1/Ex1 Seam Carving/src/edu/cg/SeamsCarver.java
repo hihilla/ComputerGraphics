@@ -125,14 +125,6 @@ public class SeamsCarver extends ImageProcessor {
                                 cost[y - 1][x] + calcCV(greyImg, y, x));
             }
         });
-
-//        forEach((y, x) -> {
-//            long c = cost[y][x];
-//            System.out.format("%7d", c);
-//            if (x == width - 1) {
-//                System.out.println();
-//            }
-//        });
         setForEachInputParameters();
         return cost;
     }
@@ -151,13 +143,6 @@ public class SeamsCarver extends ImageProcessor {
                 pEnergy[y][x] = Math.abs(p - new Color(greyImg.getRGB(x - 1, y)).getBlue());
             }
         });
-//        forEach((y, x) -> {
-//            long c = pEnergy[y][x];
-//            System.out.format("%7d", c);
-//            if (x == width - 1) {
-//                System.out.println();
-//            }
-//        });
         setForEachInputParameters();
         return pEnergy;
     }
