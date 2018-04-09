@@ -82,7 +82,6 @@ public class SeamsCarver extends ImageProcessor {
         System.out.println("we have it");
         setForEachParameters(inHeight, numOfSeams);
         forEach((i, y) -> {
-            System.out.println(i);
             int x = origSeams[i][y];
             outImg.setRGB(x, y, seamColorRGB);
         });
@@ -91,26 +90,23 @@ public class SeamsCarver extends ImageProcessor {
     }
 
     private int[][] getOriginalSeams(int[][] seams) {
-        System.out.println(numOfSeams);
         int[][] origSeams = new int[numOfSeams][inHeight];
         // must start with the last seam that was removed
         for (int i = numOfSeams - 1; i >= 0; i--) {
-            System.out.println(i);
             int[] seam = seams[i];
-            int[] origXs = new int[seam.length];
             for (int y = 0; y < inHeight; y++) {
                 int x = seam[y];
-                System.out.println("x is... " + x);
-                int origX = x + stepCounter[y][x] - 1;
+                int steps = stepCounter[y][x];
+                int origX = x + steps - 1;
+                System.out.format("after shift x: %d original x: %d\n", x, origX);
                 // update stepCounter:
-                for(int j = x; j < inWidth; i++) {
+                for (int j = x + 1; j < inWidth; j++) {
                     stepCounter[y][j]--;
                 }
-                origXs[y] = origX;
+                origSeams[i][y] = origX;
             }
-            origSeams[i] = origXs;
         }
-
+        System.out.format("there are %d seams \n", origSeams.length);
         return origSeams;
     }
 
@@ -246,13 +242,13 @@ public class SeamsCarver extends ImageProcessor {
         seam[inHeight - 1] = j;
         for (int i = inHeight - 1; i > 0; i--) {
             if (cost[i][j] == pixelEnergy[i][j] + cost[i - 1][j] + calcCV(greyImg, i, j)) {
-                seam[i] = j;
+                seam[i - 1] = j;
             } else if (j > 0 && cost[i][j] == pixelEnergy[i][j] + cost[i - 1][j - 1] + calcCL(greyImg, i, j)) {
-                seam[i] = j - 1;
+                seam[i - 1] = j - 1;
             } else {
-                seam[i] = j + 1;
+                seam[i - 1] = j + 1;
             }
-            j = seam[i];
+            j = seam[i - 1];
         }
         return seam;
     }
@@ -271,7 +267,10 @@ public class SeamsCarver extends ImageProcessor {
                 outImg.setRGB(x, y, img.getRGB(x + 1, y));
                 // update indices
 //                int[] indices = {x + 1, y};
-                stepCounter[y][x + 1]++;
+                stepCounter[y][x]++;
+                if (x == seam[y]) {
+                    System.out.println("SEAM!");
+                }
             }
         });
         setForEachInputParameters();
