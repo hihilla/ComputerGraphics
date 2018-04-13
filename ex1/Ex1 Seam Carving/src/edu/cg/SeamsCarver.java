@@ -240,14 +240,18 @@ public class SeamsCarver extends ImageProcessor {
         int newWidth = img.getWidth() - 1;
         int height = img.getHeight();
         BufferedImage outImg = newEmptyImage(newWidth, height);
-        setForEachParameters(newWidth, height);
+        setForEachParameters(newWidth + 1, height);
         forEach((y, x) -> {
-            if (x < seam[y]) {
-                // left to the seam. copy pixel.
-                outImg.setRGB(x, y, img.getRGB(x, y));
-            } else {
-                // right to the seam. copy shift pixel.
-                outImg.setRGB(x, y, img.getRGB(x + 1, y));
+            if (x < newWidth) {
+                if (x < seam[y]) {
+                    // left to the seam. copy pixel.
+                    outImg.setRGB(x, y, img.getRGB(x, y));
+                } else {
+                    // right to the seam. copy shift pixel.
+                    if (x < newWidth) {
+                        outImg.setRGB(x, y, img.getRGB(x + 1, y));
+                    }
+                }
             }
             if (x == seam[y]) {
                 // update indices
@@ -271,23 +275,17 @@ public class SeamsCarver extends ImageProcessor {
             }
 
             int lastIndex = curRow.size() - 1;
-            if (curRow.size() == 451) {
-                System.out.println("STOP");
-            }
             if (curRow.get(lastIndex) != inWidth - 1) {
                 curRow.add(lastIndex, inWidth - 1);
                 curRow.add(lastIndex, inWidth - 1);
             }
 
-            int counter = 0;
             for (int j = 0; j < outWidth; j++) {
-//                System.out.println(j);
                 cur = curRow.get(j);
                 int dif = cur - prev;
                 if (dif > 1) {
                     int tempVal = prev;
                     for (int i = 1; i < dif; i++) {
-                        System.out.println(++counter);
                         curRow.add(j++, tempVal + i);
                         curRow.add(j++, tempVal + i);
                         prev = curRow.get(j);
