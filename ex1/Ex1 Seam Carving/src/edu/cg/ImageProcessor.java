@@ -70,24 +70,7 @@ public class ImageProcessor extends FunctioalForEachLoops {
     public BufferedImage greyscale() {
         logger.log("creates a greyscale image.");
 
-        int r = rgbWeights.redWeight;
-        int g = rgbWeights.greenWeight;
-        int b = rgbWeights.blueWeight;
-        int amount = rgbWeights.weightsAmount;
-
-        BufferedImage ans = newEmptyInputSizedImage();
-
-        forEach((y, x) -> {
-            Color c = new Color(workingImage.getRGB(x, y));
-            int red = r * c.getRed();
-            int green = g * c.getGreen();
-            int blue = b * c.getBlue();
-            int greyColor = (int) ((red + green + blue) / (double) amount);
-            Color color = new Color(greyColor, greyColor, greyColor);
-            ans.setRGB(x, y, color.getRGB());
-        });
-
-        return ans;
+        return greyscale(workingImage);
     }
 
     public BufferedImage greyscale(BufferedImage img) {
@@ -122,15 +105,13 @@ public class ImageProcessor extends FunctioalForEachLoops {
      * @return the resulted image
      */
     public BufferedImage gradientMagnitude() {
-        logger.log("Preparing for Gradient magnitude changing...");
-
         // check for size:
         if (inWidth <= 1 || inHeight <= 1) {
             logger.log("Image is too small for calculating gradient magnitude.");
             throw new RuntimeException("Image is too small for calculating gradient magnitude.");
         }
 
-        BufferedImage greyImage = greyscale();
+        BufferedImage greyImage = greyscale(workingImage);
         BufferedImage ans = newEmptyInputSizedImage();
 
         forEach((y, x) -> {
@@ -171,7 +152,7 @@ public class ImageProcessor extends FunctioalForEachLoops {
      * @return scaled image
      */
     public BufferedImage nearestNeighbor() {
-        logger.log("Preparing for Nearest neighbor changing...");
+        logger.log("applies nearest neighbor interpolation.");
 
         BufferedImage ans = newEmptyOutputSizedImage();
         double xFactor = (double) outWidth / inWidth;
@@ -195,7 +176,7 @@ public class ImageProcessor extends FunctioalForEachLoops {
      * @return scaled image
      */
     public BufferedImage bilinear() {
-        logger.log("Preparing for Bilinear interpolation changing...");
+        logger.log("applies bilinear interpolation.");
 
         BufferedImage ans = newEmptyOutputSizedImage();
         double xFactor = (double) outWidth / inWidth;

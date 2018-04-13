@@ -17,9 +17,6 @@ public class SeamsCarver extends ImageProcessor {
     private ResizeOperation resizeOp;
     private List<List<Integer>> originalXs;
 
-    //TODO: Add some additional fields:
-
-
     //MARK: Constructor
     public SeamsCarver(Logger logger, BufferedImage workingImage,
                        int outWidth, RGBWeights rgbWeights) {
@@ -41,8 +38,6 @@ public class SeamsCarver extends ImageProcessor {
         else
             resizeOp = this::duplicateWorkingImage;
 
-        //TODO: Initialize your additional fields and apply some preliminary calculations:
-
         originalXs = new ArrayList<>();
         setForEachInputParameters();
         forEachHeight((y) -> {
@@ -59,6 +54,7 @@ public class SeamsCarver extends ImageProcessor {
 
     //MARK: Unimplemented methods
     private BufferedImage reduceImageWidth() {
+        logger.log("Seam carving: begins preliminary calculations.");
         BufferedImage outImg = duplicateWorkingImage();
         for (int i = 0; i < numOfSeams; i++) {
             BufferedImage greyImg = greyscale(outImg);
@@ -70,11 +66,12 @@ public class SeamsCarver extends ImageProcessor {
             // remove seam now
             outImg = removeSeamFrom(outImg, seam);
         }
-
+        logger.log("Seam carving: preliminary calculations were ended.");
         return outImg;
     }
 
     private BufferedImage increaseImageWidth() {
+        logger.log("Seam carving: begins preliminary calculations.");
         getAllSeams();
         BufferedImage outImg = newEmptyOutputSizedImage();
         setForEachOutputParameters();
@@ -83,7 +80,7 @@ public class SeamsCarver extends ImageProcessor {
             int rgb = workingImage.getRGB(origX, y);
             outImg.setRGB(x, y, rgb);
         });
-
+        logger.log("Seam carving: preliminary calculations were ended.");
         return outImg;
     }
 
