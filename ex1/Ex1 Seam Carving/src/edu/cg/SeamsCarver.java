@@ -2,6 +2,7 @@ package edu.cg;
 
 import java.awt.image.BufferedImage;
 import java.awt.Color;
+import java.util.*;
 
 public class SeamsCarver extends ImageProcessor {
 
@@ -14,7 +15,7 @@ public class SeamsCarver extends ImageProcessor {
     //MARK: Fields
     private int numOfSeams;
     private ResizeOperation resizeOp;
-    private int[][] stepCounter; // how many steps pixel was moved to the LEFT
+    private List<List<Integer>> originalXs;
 
     //TODO: Add some additional fields:
 
@@ -41,10 +42,13 @@ public class SeamsCarver extends ImageProcessor {
             resizeOp = this::duplicateWorkingImage;
 
         //TODO: Initialize your additional fields and apply some preliminary calculations:
-        stepCounter = new int[inHeight][inWidth];
-        forEach((y, x) -> {
-//            int[] indices = {x, y};
-            stepCounter[y][x] = 0;
+
+        originalXs = new ArrayList<>();
+        setForEachInputParameters();
+        forEachHeight((y) -> {
+            ArrayList<Integer> temp = new ArrayList<>();
+            forEachWidth((x) -> temp.add(x));
+            originalXs.add(temp);
         });
     }
 
@@ -71,59 +75,38 @@ public class SeamsCarver extends ImageProcessor {
     }
 
     private BufferedImage increaseImageWidth() {
-        //TODO: Implement this method, remove the exception.
-        throw new UnimplementedMethodException("reduceImageWidth");
-    }
-
-    public BufferedImage showSeams(int seamColorRGB) {
-        int[][] seams = getAllSeams();
-        int[][] origSeams = getOriginalSeams(seams);
-        BufferedImage outImg = duplicateWorkingImage();
-        System.out.println("we have it");
-        setForEachParameters(inHeight, numOfSeams);
-        forEach((i, y) -> {
-            int x = origSeams[i][y];
-            outImg.setRGB(x, y, seamColorRGB);
+        getAllSeams();
+        BufferedImage outImg = newEmptyOutputSizedImage();
+        setForEachOutputParameters();
+        forEach((y, x) -> {
+            int origX = originalXs.get(y).get(x);
+            int rgb = workingImage.getRGB(origX, y);
+            outImg.setRGB(x, y, rgb);
         });
-        setForEachInputParameters();
+
         return outImg;
     }
 
-    private int[][] getOriginalSeams(int[][] seams) {
-        int[][] origSeams = new int[numOfSeams][inHeight];
-        // must start with the last seam that was removed
-        for (int i = numOfSeams - 1; i >= 0; i--) {
-            int[] seam = seams[i];
-            for (int y = 0; y < inHeight; y++) {
-                int x = seam[y];
-                int steps = stepCounter[y][x];
-                int origX = x + steps - 1;
-                System.out.format("after shift x: %d original x: %d\n", x, origX);
-                // update stepCounter:
-                for (int j = x + 1; j < inWidth; j++) {
-                    stepCounter[y][j]--;
-                }
-                origSeams[i][y] = origX;
-            }
-        }
-        System.out.format("there are %d seams \n", origSeams.length);
-        return origSeams;
+    public BufferedImage showSeams(int seamColorRGB) {
+        //TODO: Implement this method (bonus), remove the exception.
+        throw new UnimplementedMethodException("showSeams");
     }
 
     private int[][] getAllSeams() {
-        BufferedImage outImg = duplicateWorkingImage();
-        BufferedImage greyImg = greyscale(outImg);
         int[][] seams = new int[numOfSeams][inHeight];
-        int[][] pixelEnergy = calcPixelEnergy(greyImg);
+        BufferedImage outImg = duplicateWorkingImage();
         for (int i = 0; i < numOfSeams; i++) {
+            BufferedImage greyImg = greyscale(outImg);
+            int[][] pixelEnergy = calcPixelEnergy(greyImg);
             long[][] cost = calcCostMatrix(greyImg, pixelEnergy);
             // find the end of the seam: index of the minimum cost at the bottom row
             int minIndex = getMinIndex(cost[inHeight - 1]);
-            seams[i] = getSeam(cost, pixelEnergy, greyImg, minIndex);
-            // remove seam and mark it
-            outImg = removeSeamFrom(outImg, seams[i]);
+            int[] seam = getSeam(cost, pixelEnergy, greyImg, minIndex);
+            // remove seam now
+            outImg = removeSeamFrom(outImg, seam);
+            seams[i] = seam;
         }
-
+        addSeamsBackAndDuplicate();
         return seams;
     }
 
@@ -265,22 +248,42 @@ public class SeamsCarver extends ImageProcessor {
             } else {
                 // right to the seam. copy shift pixel.
                 outImg.setRGB(x, y, img.getRGB(x + 1, y));
+            }
+            if (x == seam[y]) {
                 // update indices
-//                int[] indices = {x + 1, y};
-                stepCounter[y][x]++;
-                if (x == seam[y]) {
-                    System.out.println("SEAM!");
-                }
+                Object objectToRemove = originalXs.get(y).get(x);
+                originalXs.get(y).remove(objectToRemove);
             }
         });
         setForEachInputParameters();
         return outImg;
     }
 
-    private void updatePixelEnergyFor(int[] seam, int[][] pixelEnergy) {
-        for (int i = 0; i < seam.length; i++) {
-            int j = seam[i];
-            pixelEnergy[i][j] = 10000;//Integer.MAX_VALUE;
+    private void addSeamsBackAndDuplicate() {
+        for (int y = 0; y < inHeight; y++) {
+            List<Integer> curRow = originalXs.get(y);
+            int cur = curRow.get(0);
+            int prev = -1;
+            // special case: has NO 0 in the beginning
+            if (cur > 0) {
+                curRow.add(0, 0);
+                curRow.add(0, 0);
+            }
+
+            for (int j = 0; j < outWidth; j++) {
+                cur = curRow.get(j);
+                int dif = cur - prev;
+                if (dif > 1) {
+                    int tempVal = prev;
+                    for (int i = 1; i < dif; i++) {
+                        curRow.add(j++, tempVal + i);
+                        curRow.add(j++, tempVal + i);
+                        prev = curRow.get(j);
+                    }
+                } else {
+                    prev = cur;
+                }
+            }
         }
     }
 }
