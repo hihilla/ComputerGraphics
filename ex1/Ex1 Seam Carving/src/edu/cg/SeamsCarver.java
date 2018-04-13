@@ -49,12 +49,14 @@ public class SeamsCarver extends ImageProcessor {
 
     //MARK: Methods
     public BufferedImage resize() {
-        return resizeOp.apply();
+        logger.log("Seam carving: begins preliminary calculations.");
+        BufferedImage outImg =  resizeOp.apply();
+        logger.log("Seam carving: preliminary calculations were ended.");
+        return outImg;
     }
 
     //MARK: Unimplemented methods
     private BufferedImage reduceImageWidth() {
-        logger.log("Seam carving: begins preliminary calculations.");
         BufferedImage outImg = duplicateWorkingImage();
         for (int i = 0; i < numOfSeams; i++) {
             BufferedImage greyImg = greyscale(outImg);
@@ -66,12 +68,11 @@ public class SeamsCarver extends ImageProcessor {
             // remove seam now
             outImg = removeSeamFrom(outImg, seam);
         }
-        logger.log("Seam carving: preliminary calculations were ended.");
+
         return outImg;
     }
 
     private BufferedImage increaseImageWidth() {
-        logger.log("Seam carving: begins preliminary calculations.");
         getAllSeams();
         BufferedImage outImg = newEmptyOutputSizedImage();
         setForEachOutputParameters();
@@ -80,7 +81,7 @@ public class SeamsCarver extends ImageProcessor {
             int rgb = workingImage.getRGB(origX, y);
             outImg.setRGB(x, y, rgb);
         });
-        logger.log("Seam carving: preliminary calculations were ended.");
+        
         return outImg;
     }
 
