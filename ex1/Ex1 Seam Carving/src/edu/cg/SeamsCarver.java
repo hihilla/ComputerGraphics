@@ -270,12 +270,24 @@ public class SeamsCarver extends ImageProcessor {
                 curRow.add(0, 0);
             }
 
+            int lastIndex = curRow.size() - 1;
+            if (curRow.size() == 451) {
+                System.out.println("STOP");
+            }
+            if (curRow.get(lastIndex) != inWidth - 1) {
+                curRow.add(lastIndex, inWidth - 1);
+                curRow.add(lastIndex, inWidth - 1);
+            }
+
+            int counter = 0;
             for (int j = 0; j < outWidth; j++) {
+//                System.out.println(j);
                 cur = curRow.get(j);
                 int dif = cur - prev;
                 if (dif > 1) {
                     int tempVal = prev;
                     for (int i = 1; i < dif; i++) {
+                        System.out.println(++counter);
                         curRow.add(j++, tempVal + i);
                         curRow.add(j++, tempVal + i);
                         prev = curRow.get(j);
