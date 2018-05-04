@@ -22,3 +22,8 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+ex2/ex2.iml
+ex2/.idea/workspace.xml
+ex2/.idea/modules.xml
+ex2/.idea/misc.xml
+ex1/.idea/workspace.xml
