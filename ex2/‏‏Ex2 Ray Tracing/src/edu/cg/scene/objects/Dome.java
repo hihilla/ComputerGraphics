@@ -24,7 +24,16 @@ public class Dome extends Shape {
 	
 	@Override
 	public Hit intersect(Ray ray) {
-		//TODO: implement this method.
-		throw new UnimplementedMethodException("intersect(Ray)");
+		// start by finding hit with the sphere:
+		Hit sphereHit = sphere.intersect(ray);
+		// only sphere in the plains normal side count!
+		// if the dot product is positive, the hit is in the dome side
+		double product = plain.normal().dot(sphereHit.getNormalToSurface());
+		if (product > 0) {
+			return sphereHit;
+		}
+
+		// hit in the plain side
+		return plain.intersect(ray);
 	}
 }
