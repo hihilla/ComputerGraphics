@@ -26,4 +26,6 @@ ex2/ex2.iml
 ex2/.idea/workspace.xml
 ex2/.idea/modules.xml
 ex2/.idea/misc.xml
+ex2/.idea/*
 ex1/.idea/workspace.xml
+*.xml
