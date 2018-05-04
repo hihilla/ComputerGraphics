@@ -36,6 +36,10 @@ public class Sphere extends Shape {
 		this.radius = radius;
 		return this;
 	}
+
+	public Point getCenter() { return center; }
+
+	public double getRadius() { return radius; }
 	
 	@Override
 	public Hit intersect(Ray ray) {

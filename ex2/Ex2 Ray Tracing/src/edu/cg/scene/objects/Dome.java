@@ -25,15 +25,23 @@ public class Dome extends Shape {
 	@Override
 	public Hit intersect(Ray ray) {
 		// start by finding hit with the sphere:
-		Hit sphereHit = sphere.intersect(ray);
+		Hit hit = sphere.intersect(ray);
 		// only sphere in the plains normal side count!
 		// if the dot product is positive, the hit is in the dome side
-		double product = plain.normal().dot(sphereHit.getNormalToSurface());
+		double product = plain.normal().dot(hit.getNormalToSurface());
 		if (product > 0) {
-			return sphereHit;
+			return hit;
 		}
 
-		// hit in the plain side
-		return plain.intersect(ray);
+		// check if hit is on the plane
+		hit = plain.intersect(ray);
+		Point p1 = sphere.getCenter();
+		Point p2 = ray.source().add(hit.t(), ray.direction());
+		double dist = p1.dist(p2);
+		if (dist > sphere.getRadius()) {
+			return new Hit();
+		}
+
+		return hit;
 	}
 }
