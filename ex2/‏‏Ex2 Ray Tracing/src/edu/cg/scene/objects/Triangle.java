@@ -50,8 +50,8 @@ public class Triangle extends Shape {
 			return new Hit(t, N);
 		}
 
-		// no hit?
-		return new Hit(0, new Vec());
+		// no hit
+		return new Hit();
 	}
 
 	private boolean isInside(Point P0, Point P) {

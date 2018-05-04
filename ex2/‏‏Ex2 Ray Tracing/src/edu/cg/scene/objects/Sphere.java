@@ -49,8 +49,8 @@ public class Sphere extends Shape {
 		double tm = L.dot(V);
 		double d2 = L.lengthSqr() - (tm * tm);
 		if (d2 > (r * r)) {
-			// no hit?
-			return new Hit(0, new Vec());
+			// no hit
+			return new Hit();
 		}
 
 		double th = Math.sqrt((r * r) - d2);
