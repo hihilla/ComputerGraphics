@@ -4,6 +4,7 @@ import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
+import edu.cg.algebra.Vec;
 
 public class Triangle extends Shape {
 	private Point p1, p2, p3;
@@ -29,7 +30,45 @@ public class Triangle extends Shape {
 
 	@Override
 	public Hit intersect(Ray ray) {
-		//TODO: implement this method.
-		throw new UnimplementedMethodException("intersect(Ray)");
+		// First, intersect ray with plane
+		// calc normal:
+		Vec v1 = p1.sub(p2);
+		Vec v2 = p3.sub(p2);
+		Vec temp = v2.cross(v1);
+		Vec N = temp.mult(1.0 / temp.length());
+		// calc hit
+		Vec V = ray.direction();
+		Point P0 = ray.source();
+
+		Vec up = p1.sub(P0);
+		double down = N.dot(V);
+		Vec shever = up.mult(1.0 / down);
+		double t = N.dot(shever);
+		Point P = P0.add(t, V);
+		// Then, check if point is inside triangle
+		if (isInside(P0, P)) {
+			return new Hit(t, N);
+		}
+
+		// no hit?
+		return new Hit(0, new Vec());
+	}
+
+	private boolean isInside(Point P0, Point P) {
+		// Algebraic Method
+		Vec V1 = p1.sub(P0);
+		Vec V2 = p2.sub(P0);
+		Vec V3 = p3.sub(P0);
+
+		Vec N1 = V2.cross(V1).mult(1.0 / V2.cross(V1).length());
+		Vec N2 = V3.cross(V2).mult(1.0 / V3.cross(V2).length());
+		Vec N3 = V1.cross(V3).mult(1.0 / V1.cross(V3).length());
+
+		Vec temp = P.sub(P0);
+		double sign1 = Math.signum(temp.dot(N1));
+		double sign2 = Math.signum(temp.dot(N2));
+		double sign3 = Math.signum(temp.dot(N3));
+
+		return sign1 == sign2 && sign2 == sign3;
 	}
 }
