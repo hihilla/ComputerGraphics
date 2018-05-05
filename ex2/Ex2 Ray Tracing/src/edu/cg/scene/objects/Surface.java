@@ -1,10 +1,12 @@
 package edu.cg.scene.objects;
 
-import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
+import edu.cg.scene.lightSources.Light;
+
+import java.util.List;
 
 public class Surface implements Intersectable {
 	private Shape shape;
@@ -82,8 +84,10 @@ public class Surface implements Intersectable {
 
 	public Vec calcPhong(Vec N, Vec V, Vec L){
 		double n = material.shininess;
-		double VdotR = V.neg().dot(Vec.calcR(N, L).neg());
+		Vec R = Vec.calcR(N, L).neg();
+		double VdotR = V.neg().dot(R);
+		double VRpowN = Math.pow(VdotR, n);
 
-		return (Ks().mult(Math.pow(VdotR, n)));
+		return (Ks().mult(VRpowN));
 	}
 }
