@@ -82,7 +82,16 @@ public class Vec {
 	private static float clip(double val) {
 		return (float)Math.min(1, Math.max(0, val));
 	}
-	
+
+	public static Vec calcR(Vec N, Vec L){
+
+		Vec Nneg = N.neg();
+		Vec temp = Nneg.mult(L.dot(Nneg));
+		Vec R = L.add(temp.mult(-2));
+
+		return R;
+	}
+
 	@Override
 	public String toString() {
 		return "(" + x + ", " + y + ", " + z + ")";
