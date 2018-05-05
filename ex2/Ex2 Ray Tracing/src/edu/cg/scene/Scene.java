@@ -236,7 +236,8 @@ public class Scene {
 		}
 		Vec KRIR = new Vec();
 		Ray outRay = new Ray(hittingPoint, Vec.calcR(N, V));
-		KRIR = KRIR.add(calcColor(outRay, recusionLevel + 1));
+		double intensity = surface.reflectionIntensity();
+		KRIR = KRIR.add(calcColor(outRay, recusionLevel + 1).mult(intensity));
 
 
 		return ambientColor.add(sigma).add(KRIR);
