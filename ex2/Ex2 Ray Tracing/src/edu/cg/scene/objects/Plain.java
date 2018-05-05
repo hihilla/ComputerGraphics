@@ -119,7 +119,7 @@ public class Plain extends Shape {
         Point Q0 = pointOnPlane();
         Vec Q0P0 = Q0.sub(ray.source());
         Vec V = ray.direction();
-        double normalDotRay = normal.dot(V);
+        double normalDotRay = normal().dot(V);
         double scalar = 1.0 / normalDotRay;
         Vec shever = Q0P0.mult(scalar);
         double t = normal.dot(shever);
