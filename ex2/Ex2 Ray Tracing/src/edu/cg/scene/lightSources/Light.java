@@ -1,4 +1,4 @@
-package edu.cg.scene.lightSources;
+﻿package edu.cg.scene.lightSources;
 
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
@@ -28,7 +28,9 @@ public abstract class Light {
 	 • from direction (q,f), ...
 	 • with wavelength l
 	 */
-	abstract public Vec calcIL(Point location, Vec direction, double wavelength);
 
 	abstract public Ray getRayToLight(Point p);
+
+	abstract public Vec calcIL(Point location);
+
 }
