@@ -26,7 +26,7 @@ public class DirectionalLight extends Light {
 	//TODO: add some methods
 
 	@Override
-	public Vec calcIL(Point location, Vec direction, double wavelength) {
+	public Vec calcIL(Point location) {
 		return intensity;
 	}
 }

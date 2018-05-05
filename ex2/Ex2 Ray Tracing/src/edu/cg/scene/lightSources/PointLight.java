@@ -44,7 +44,7 @@ public class PointLight extends Light {
 	//TODO: add some methods
 
 	@Override
-	public Vec calcIL(Point location, Vec direction, double wavelength) {
+	public Vec calcIL(Point location) {
 		double d = location.dist(position);
 		double down = kc + kl * d + kq * d * d;
 

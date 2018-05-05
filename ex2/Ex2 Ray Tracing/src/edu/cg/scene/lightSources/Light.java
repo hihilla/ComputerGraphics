@@ -27,5 +27,5 @@ public abstract class Light {
 	 • from direction (q,f), ...
 	 • with wavelength l
 	 */
-	abstract public Vec calcIL(Point location, Vec direction, double wavelength);
+	abstract public Vec calcIL(Point location);
 }
