@@ -58,6 +58,10 @@ public class Vec {
 	public Vec mult(double a) {
 		return Ops.mult(a, this);
 	}
+
+	public Vec div(double e) {
+		return this.mult(1.0 / e);
+	}
 	
 	public Vec mult(Vec v) {
 		return Ops.mult(this, v);

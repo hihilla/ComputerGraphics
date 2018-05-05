@@ -1,5 +1,6 @@
 package edu.cg.scene.lightSources;
 
+import edu.cg.algebra.Point;
 import edu.cg.algebra.Vec;
 
 public abstract class Light {
@@ -17,4 +18,14 @@ public abstract class Light {
 	}
 	
 	//TODO: add some methods
+
+	/**
+	 * IL(x,y,z,q,f,l) ...
+	 • describes the intensity of energy,
+	 • leaving a light source, …
+	 • arriving at location (x,y,z), ...
+	 • from direction (q,f), ...
+	 • with wavelength l
+	 */
+	abstract public Vec calcIL(Point location, Vec direction, double wavelength);
 }

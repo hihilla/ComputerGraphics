@@ -1,5 +1,6 @@
 package edu.cg.scene.lightSources;
 
+import edu.cg.algebra.Point;
 import edu.cg.algebra.Vec;
 
 public class DirectionalLight extends Light {
@@ -23,4 +24,9 @@ public class DirectionalLight extends Light {
 	}
 	
 	//TODO: add some methods
+
+	@Override
+	public Vec calcIL(Point location, Vec direction, double wavelength) {
+		return intensity;
+	}
 }

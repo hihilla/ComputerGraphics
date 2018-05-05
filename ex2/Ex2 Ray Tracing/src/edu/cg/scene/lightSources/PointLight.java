@@ -42,4 +42,12 @@ public class PointLight extends Light {
 	}
 
 	//TODO: add some methods
+
+	@Override
+	public Vec calcIL(Point location, Vec direction, double wavelength) {
+		double d = location.dist(position);
+		double down = kc + kl * d + kq * d * d;
+
+		return intensity.div(down);
+	}
 }

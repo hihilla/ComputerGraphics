@@ -65,7 +65,7 @@ public class Sphere extends Shape {
 
 		Point P = P0.add(t, V);
 		Vec temp = P.sub(O);
-		Vec N = temp.mult(1.0 / temp.length());
+		Vec N = temp.div(temp.length());
 
 		return new Hit(t, N);
 	}
