@@ -52,4 +52,6 @@ public class Spotlight extends PointLight {
 
 		return up.div(down);
 	}
+
+
 }
