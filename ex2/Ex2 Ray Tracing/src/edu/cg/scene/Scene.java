@@ -244,7 +244,7 @@ public class Scene {
 
 	private Hit findIntersection(Ray ray) {
 		double minT = Double.MAX_VALUE;
-		Hit hit = null;
+		Hit hit = new Hit();
 		for (Surface surface: surfaces) {
 			Hit curHit = surface.intersect(ray);
 			if (curHit.t() < minT) {
