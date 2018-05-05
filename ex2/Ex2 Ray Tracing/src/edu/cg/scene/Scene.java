@@ -11,6 +11,7 @@ import java.util.concurrent.Future;
 
 import edu.cg.Logger;
 import edu.cg.UnimplementedMethodException;
+import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
@@ -194,9 +195,69 @@ public class Scene {
 			return calcColor(ray, 0).toColor();
 		});
 	}
-	
+
+	/**
+	 * This method simulates the ray tracing algorithm.
+	 * @param ray
+	 * @param recusionLevel
+	 * @return
+	 */
 	private Vec calcColor(Ray ray, int recusionLevel) {
-		//TODO: implement this method
-		throw new UnimplementedMethodException("calcColor(Ray, int)");
+		// shoot ray to all surfaces to get closest hit
+		Hit hit = findIntersection(ray);
+
+		// if ray doesnt hit anything - return background color
+		if (!hit.successHit()) {
+			return backgroundColor;
+		}
+		Point hittingPoint = ray.getHittingPoint(hit);
+		Vec N = hit.getNormalToSurface();
+		Vec V = ray.direction();
+		Surface surface = hit.getSurface();
+		Vec ambientColor = surface.Ka().mult(this.ambient); // KAIA
+		Vec sigma = new Vec();
+		for (Light light: lightSources) {
+			Ray lRay = light.getRayToLight(hittingPoint);
+			Vec Li = lRay.direction();
+			Vec Ii = light.calcIL(hittingPoint);
+
+			Vec first = surface.Kd(hittingPoint).mult(N.dot(Li));
+			Vec second = surface.calcPhong(N, V, Li);
+
+			Vec sum = first.add(second);
+			if (calcSi(lRay)) {
+				sigma = sigma.add(sum.mult(Ii));
+			}
+		}
+
+		// recursive part:
+		if (recusionLevel == maxRecursionLevel) {
+			return new Vec();
+		}
+		Vec KRIR = new Vec();
+		Ray outRay = new Ray(hittingPoint, Vec.calcR(N, V));
+		KRIR = KRIR.add(calcColor(outRay, recusionLevel + 1));
+
+
+		return ambientColor.add(sigma).add(KRIR);
+	}
+
+	private Hit findIntersection(Ray ray) {
+		double minT = Double.MAX_VALUE;
+		Hit hit = null;
+		for (Surface surface: surfaces) {
+			Hit curHit = surface.intersect(ray);
+			if (curHit.t() < minT) {
+				minT = curHit.t();
+				hit = curHit;
+			}
+		}
+
+		return hit;
+	}
+
+	private boolean calcSi(Ray L) {
+		Hit hit = findIntersection(L);
+		return !hit.successHit();
 	}
 }
