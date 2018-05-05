@@ -16,8 +16,7 @@ public class Hit implements Comparable<Hit> {
 	}
 
 	public Hit() {
-		this.t = 0;
-		this.normalToSurface = new Vec();
+		this(0, new Vec());
 		this.successHit = false;
 	}
 
