@@ -9,19 +9,19 @@ import edu.cg.algebra.Vec;
 public class Dome extends Shape {
 	private Sphere sphere;
 	private Plain plain;
-	
+
 	public Dome() {
 		sphere = new Sphere().initCenter(new Point(0, -0.5, -6));
 		plain = new Plain(new Vec(-1, 0, -1), new Point(0, -0.5, -6));
 	}
-	
+
 	@Override
 	public String toString() {
 		String endl = System.lineSeparator();
-		return "Dome:" + endl + 
+		return "Dome:" + endl +
 				sphere + plain + endl;
 	}
-	
+
 	@Override
 	public Hit intersect(Ray ray) {
 		// start by finding hit with the sphere:
@@ -35,10 +35,27 @@ public class Dome extends Shape {
 
 		// check if hit is on the plane
 		hit = plain.intersect(ray);
-		Point p1 = sphere.getCenter();
-		Point p2 = ray.source().add(hit.t(), ray.direction());
-		double dist = p1.dist(p2);
-		if (dist > sphere.getRadius()) {
+
+		// prepare to calculate
+		double A = plain.getA();
+		double B = plain.getB();
+		double C = plain.getC();
+		double D = plain.getD();
+		double x = sphere.getCenter().x;
+		double y = sphere.getCenter().y;
+		double z = sphere.getCenter().z;
+		double R = sphere.getRadius();
+
+		// calculate the circle which is the intersection between the sphere and the plain
+        double sqrt = Math.sqrt(A * A + B * B + C * C);
+        double rho = (A * x + B * y + C * z + D) / sqrt;
+        double r = Math.sqrt(R * R + rho * rho);
+        Point c = sphere.getCenter().add(rho / sqrt, plain.normal());
+
+        // check if hit is in circle
+		Point p = ray.source().add(hit.t(), ray.direction());
+		double dist = c.dist(p);
+		if (dist > r) {
 			return new Hit();
 		}
 
