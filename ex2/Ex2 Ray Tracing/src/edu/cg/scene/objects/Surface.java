@@ -75,4 +75,11 @@ public class Surface implements Intersectable {
 	public double n2(Hit hit) {
 		return hit.isWithinTheSurface() ? 1 : material.refractionIndex;
 	}
+
+	public Vec calcPhong(Vec N, Vec V){
+		double n = material.shininess;
+		double VdotR = V.neg().dot(N.neg());
+
+		return (Ks().mult(Math.pow(VdotR, n)));
+	}
 }
