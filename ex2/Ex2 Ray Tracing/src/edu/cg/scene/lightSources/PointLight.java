@@ -1,8 +1,6 @@
 package edu.cg.scene.lightSources;
 
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 
 public class PointLight extends Light {
 	protected Point position;
@@ -56,5 +54,16 @@ public class PointLight extends Light {
 	public Ray getRayToLight(Point p){
 		Ray ray = new Ray(p, this.position);
 		return ray;
+	}
+
+	@Override
+	public int calcSi(Hit hit, Ray ray) {
+		Point originPoint = ray.source();
+		double tLight = originPoint.dist(position);
+		if (hit.t() < tLight && hit.t() > Ops.epsilon) {
+			// theres shadow!!
+			return 0;
+		}
+		return 1;
 	}
 }

@@ -1,7 +1,6 @@
 package edu.cg.scene.lightSources;
 
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 
 public class Spotlight extends PointLight {
 	private Vec direction;
@@ -53,5 +52,23 @@ public class Spotlight extends PointLight {
 		return up.div(down);
 	}
 
-
+	@Override
+	public int calcSi(Hit hit, Ray ray) {
+		Point originPoint = ray.source();
+		double tLight = originPoint.dist(position);
+		if (hit.t() < tLight && hit.t() > Ops.epsilon) {
+			// theres shadow!!
+			return 0;
+		}
+		// no shadow - check if ray is in the direction and angle of light
+		Vec u = ray.direction().neg();
+		Vec v = direction;
+		// find angle between ray and direction. if smaller than angle of light - object is lit!
+		double a = v.findAngleWith(u);
+		if (a < angle) {
+			// lit!
+			return 1;
+		}
+		return 0;
+	}
 }

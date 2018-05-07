@@ -1,8 +1,6 @@
 package edu.cg.scene.lightSources;
 
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 
 public abstract class Light {
 	protected Vec intensity = new Vec(1, 1, 1); //white color
@@ -24,4 +22,10 @@ public abstract class Light {
 
 	abstract public Vec calcIL(Point location);
 
+	public int calcSi(Hit hit, Ray ray) {
+		if (hit.successHit()) {
+			return 0;
+		}
+		return 1;
+	}
 }

@@ -8,7 +8,6 @@ public class Hit implements Comparable<Hit> {
 	
 	private boolean isWithin = false;
 	private Surface surface = null;
-	private boolean successHit = true;
 	
 	public Hit(double t, Vec normalToSurface) {
 		this.t = t;
@@ -17,7 +16,6 @@ public class Hit implements Comparable<Hit> {
 
 	public Hit() {
 		this(0, new Vec());
-		this.successHit = false;
 	}
 
 	public Vec getNormalToSurface() {
@@ -54,7 +52,7 @@ public class Hit implements Comparable<Hit> {
 		return t;
 	}
 
-	public boolean successHit() { return successHit; }
+	public boolean successHit() { return t > Ops.epsilon && t < Ops.infinity; }
 	
 	@Override
 	public int compareTo(Hit other) {
