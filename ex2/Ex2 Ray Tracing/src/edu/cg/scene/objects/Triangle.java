@@ -30,45 +30,34 @@ public class Triangle extends Shape {
 
 	@Override
 	public Hit intersect(Ray ray) {
-		// First, intersect ray with plane
-		// calc normal:
-		Vec v1 = p1.sub(p2);
-		Vec v2 = p3.sub(p2);
-		Vec temp = v2.cross(v1);
-		Vec N = temp.div(temp.length());
-		// calc hit
 		Vec V = ray.direction();
 		Point P0 = ray.source();
 
-		Vec up = p1.sub(P0);
-		double down = N.dot(V);
-		Vec shever = up.div(down);
-		double t = N.dot(shever);
-		Point P = P0.add(t, V);
-		// Then, check if point is inside triangle
-		if (isInside(P0, P)) {
-			return new Hit(t, N);
-		}
-
-		// no hit
-		return new Hit();
-	}
-
-	private boolean isInside(Point P0, Point P) {
-		// Algebraic Method
 		Vec V1 = p1.sub(P0);
 		Vec V2 = p2.sub(P0);
 		Vec V3 = p3.sub(P0);
 
-		Vec N1 = V2.cross(V1).div(V2.cross(V1).length());
-		Vec N2 = V3.cross(V2).div(V3.cross(V2).length());
-		Vec N3 = V1.cross(V3).div(V1.cross(V3).length());
+		Vec n1 = V1.cross(V2);
+		Vec n2 = V2.cross(V3);
+		Vec n3 = V3.cross(V1);
 
-		Vec temp = P.sub(P0);
-		double sign1 = Math.signum(temp.dot(N1));
-		double sign2 = Math.signum(temp.dot(N2));
-		double sign3 = Math.signum(temp.dot(N3));
+		// if all normals turn in, dot product between rays vector and a normal will be positive.
+		// if all normals turn out, negative.
 
-		return sign1 == sign2 && sign2 == sign3;
+		// p3-p1 and n1 has same direction -> tun in = true
+		Vec v13 = p3.sub(p1);
+		boolean turnIn = n1.dot(v13) > 0;
+		if (V.dot(n1) > 0 && turnIn) {
+			// hit!
+			Vec v12 = p2.sub(p1);
+			Vec N = v12.cross(v13).normalize();
+			// create plane with N and p1
+			Plain plain = new Plain(N, p1);
+			// return hit with plain
+			return plain.intersect(ray);
+		}
+
+		// no hit
+		return new Hit();
 	}
 }
