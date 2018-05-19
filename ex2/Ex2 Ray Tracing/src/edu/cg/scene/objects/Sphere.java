@@ -49,7 +49,7 @@ public class Sphere extends Shape {
 		double r = radius;
 
 		// Geometric method:
-		Vec L = P0.sub(O);
+		Vec L = O.sub(P0);
 		double tm = L.dot(V);
 		double d2 = L.lengthSqr() - (tm * tm);
 		if (d2 > (r * r)) {
@@ -65,8 +65,7 @@ public class Sphere extends Shape {
 
 		Point P = P0.add(t, V);
 		Vec temp = P.sub(O);
-		Vec N = temp.div(temp.length());
-
+		Vec N = temp.normalize();
 		return new Hit(t, N);
 	}
 }
