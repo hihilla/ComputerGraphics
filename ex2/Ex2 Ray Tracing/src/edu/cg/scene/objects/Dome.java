@@ -50,9 +50,11 @@ public class Dome extends Shape {
         double sqrt = Math.sqrt(A * A + B * B + C * C);
         double rho = (A * x + B * y + C * z + D) / sqrt;
         double r = Math.sqrt(R * R + rho * rho);
-        Point c = sphere.getCenter().add(rho / sqrt, plain.normal());
 
-        // check if hit is in circle
+        Vec right = plain.normal().div(sqrt).mult(rho);
+		Point c = sphere.getCenter().add(right);
+
+		// check if hit is in circle
 		Point p = ray.source().add(hit.t(), ray.direction());
 		double dist = c.dist(p);
 		if (dist > r) {
