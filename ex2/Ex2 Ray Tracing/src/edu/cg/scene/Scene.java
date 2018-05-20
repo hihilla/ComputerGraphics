@@ -223,7 +223,9 @@ public class Scene {
 
 			Vec sum = first.add(second);
 
-            sigma = sigma.add(sum.mult(Ii).mult(calcSi(lRay, light)));
+			double Si = calcSi(lRay, light);
+			Vec IiSi = sum.mult(Ii).mult(Si);
+			sigma = sigma.add(IiSi);
 		}
 
 		if (!renderReflections) {
