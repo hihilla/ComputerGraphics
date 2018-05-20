@@ -26,6 +26,6 @@ public abstract class Light {
 		if (hit.successHit()) {
 			return 0;
 		}
-		return intensity.norm();
+		return 1;
 	}
 }

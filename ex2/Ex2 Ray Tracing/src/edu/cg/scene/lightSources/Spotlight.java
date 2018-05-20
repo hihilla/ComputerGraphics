@@ -65,7 +65,7 @@ public class Spotlight extends PointLight {
 		double a = v.findCosAngleWith(u);
 		if (a < angle) {
 			// lit!
-			return intensity.norm();
+			return 1;
 		}
 		return 0;
 	}

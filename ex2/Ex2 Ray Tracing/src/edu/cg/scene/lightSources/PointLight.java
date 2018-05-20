@@ -64,6 +64,6 @@ public class PointLight extends Light {
 			// theres shadow!!
 			return 0;
 		}
-		return intensity.norm();
+		return 1;
 	}
 }
