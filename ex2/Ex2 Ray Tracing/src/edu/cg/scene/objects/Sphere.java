@@ -43,7 +43,7 @@ public class Sphere extends Shape {
 	
 	@Override
 	public Hit intersect(Ray ray) {
-		Vec V = ray.direction();
+		Vec V = ray.direction().normalize(); // Adar added norm
 		Point P0 = ray.source();
 		Point O = center;
 		double r = radius;

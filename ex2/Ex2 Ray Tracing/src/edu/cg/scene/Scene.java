@@ -209,13 +209,13 @@ public class Scene {
 		}
 		Point hittingPoint = ray.getHittingPoint(hit);
 		Vec N = hit.getNormalToSurface();
-		Vec V = ray.direction();
+		Vec V = ray.direction().normalize(); // Adar added norm
 		Surface surface = hit.getSurface();
 		Vec ambientColor = surface.Ka().mult(this.ambient); // KAIA
 		Vec sigma = new Vec();
 		for (Light light: lightSources) {
 			Ray lRay = light.getRayToLight(hittingPoint);
-			Vec Li = lRay.direction();
+			Vec Li = lRay.direction().normalize(); // Adar normed
 			Vec Ii = light.calcIL(hittingPoint);
 
 			Vec first = surface.Kd(hittingPoint).mult(N.dot(Li));

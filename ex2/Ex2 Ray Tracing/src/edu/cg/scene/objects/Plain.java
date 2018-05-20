@@ -1,11 +1,7 @@
 package edu.cg.scene.objects;
 
 import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Mat3x3;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 
 public class Plain extends Shape {
     //implicit form of a plain: ax + by + cz + d = 0;
@@ -114,32 +110,54 @@ public class Plain extends Shape {
     }
 
     public boolean isPointOnPlane(Point p) {
-        return a * p.x + b * p.y + c * p.z == -d;
-    }
+        return normal().dot(p.sub(pointOnPlane())) == 0;    }
 
     @Override
     public Hit intersect(Ray ray) {
-        // the ray is parallel to the plane
-        if (normal().dot(ray.direction()) == 0){
-            return new Hit();
-        }
 
-        //finding t	according to formula
-        Point Q0 = pointOnPlane();
-        Vec Q0P0 = Q0.sub(ray.source());
-        Vec V = ray.direction();
-        double normalDotRay = normal().dot(V);
-        double scalar = 1.0 / normalDotRay;
-        Vec shever = Q0P0.mult(scalar);
-        double t = normal().dot(shever);
-        //checking which direction is the right one through the normal and its' opposite
-        Vec Vneg = V.neg();
-        if (normal().dot(Vneg) > 0) {
+        Vec normal = new Vec(new Vec(a, b, c));
+
+        double Vd = ray.direction().dot(normal);
+
+            double V0 = (normal.dot(ray.source().toVec()) + d)* - 1;
+            double t = V0 / Vd;
+
+            if (t < Ops.epsilon || t > Ops.infinity)
+                return new Hit();
+
+            double dotProduct = ray.direction().dot(normal());
+
+            if (dotProduct > 0) {
+                return new Hit(t, normal().neg());
+            }
+
             return new Hit(t, normal());
-        } else {
-            return new Hit(t, normal().neg());
+
         }
-    }
+        // the ray is parallel to the plane
+//        if (normal().dot(ray.direction()) == 0){
+//            return new Hit();
+//        }
+//
+//        //finding t	according to formula
+//        Point Q0 = pointOnPlane();
+//        Vec Q0P0 = Q0.sub(ray.source());
+//        Vec V = ray.direction();
+//        double normalDotRay = normal().dot(V);
+//        double scalar = 1.0 / normalDotRay;
+//        Vec shever = Q0P0.mult(scalar);
+//        double t = normal().dot(shever);
+//
+//        if (t < Ops.epsilon || t > Ops.infinity){
+//            return new Hit();
+//        }
+//        //checking which direction is the right one through the normal and its' opposite
+//        Vec Vneg = V.neg();
+//        if (normal().dot(Vneg) > 0) {
+//            return new Hit(t, normal());
+//        } else {
+//            return new Hit(t, normal().neg());
+
 
     public double getA() {
         return a;
