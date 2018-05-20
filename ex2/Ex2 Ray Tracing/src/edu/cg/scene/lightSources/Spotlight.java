@@ -42,7 +42,7 @@ public class Spotlight extends PointLight {
 
 	@Override
 	public Vec calcIL(Point location) {
-		Vec L = location.sub(position);
+		Vec L = location.sub(position).normalize();
 		double d = location.dist(position);
 		double down = kc + (kl * d) + (kq * (d * d));
 		Vec up = intensity.mult(this.direction.dot(L));
