@@ -115,6 +115,10 @@ public class Plain extends Shape {
 
     @Override
     public Hit intersect(Ray ray) {
+        // the ray is parallel to the plane
+        if (normal.dot(ray.direction()) == 0){
+            return new Hit();
+        }
         //finding t	according to formula
         Point Q0 = pointOnPlane();
         Vec Q0P0 = Q0.sub(ray.source());
