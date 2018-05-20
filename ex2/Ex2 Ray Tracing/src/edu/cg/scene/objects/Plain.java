@@ -114,7 +114,7 @@ public class Plain extends Shape {
     }
 
     public boolean isPointOnPlane(Point p) {
-        return a * p.x + b * p.y + c * p.z == -d;
+        return normal().dot(p.sub(pointOnPlane())) == 0;
     }
 
     @Override
