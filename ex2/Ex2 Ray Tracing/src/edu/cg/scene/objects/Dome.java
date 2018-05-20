@@ -29,7 +29,7 @@ public class Dome extends Shape {
 		// only sphere in the plains normal side count!
 		// if the dot product is positive, the hit is in the dome side
 		double product = plain.normal().dot(hit.getNormalToSurface());
-		if (product > 0) {
+		if (product >= 0) {
 			return hit;
 		}
 

@@ -203,7 +203,7 @@ public class Scene {
 		// shoot ray to all surfaces to get closest hit
 		Hit hit = findIntersection(ray);
 
-		// if ray doesnt hit anything - return background color
+		// if ray doesn't hit anything - return background color
 		if (!hit.successHit()) {
 			return backgroundColor;
 		}
