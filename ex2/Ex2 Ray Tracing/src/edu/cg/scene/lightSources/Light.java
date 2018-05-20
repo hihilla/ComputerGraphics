@@ -22,10 +22,10 @@ public abstract class Light {
 
 	abstract public Vec calcIL(Point location);
 
-	public int calcSi(Hit hit, Ray ray) {
+	public double calcSi(Hit hit, Ray ray) {
 		if (hit.successHit()) {
 			return 0;
 		}
-		return 1;
+		return intensity.norm();
 	}
 }

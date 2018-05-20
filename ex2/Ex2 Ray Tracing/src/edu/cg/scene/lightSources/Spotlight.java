@@ -39,25 +39,23 @@ public class Spotlight extends PointLight {
 	public Spotlight initDecayFactors(double q, double l, double c) {
 		return (Spotlight)super.initDecayFactors(q, l, c);
 	}
-	
-	//TODO: add some methods
 
 	@Override
 	public Vec calcIL(Point location) {
 		Vec L = location.sub(position);
 		double d = location.dist(position);
-		double down = kc + kl * d + kq * d * d;
+		double down = kc + (kl * d) + (kq * (d * d));
 		Vec up = intensity.mult(this.direction.dot(L));
 
 		return up.div(down);
 	}
 
 	@Override
-	public int calcSi(Hit hit, Ray ray) {
+	public double calcSi(Hit hit, Ray ray) {
 		Point originPoint = ray.source();
 		double tLight = originPoint.dist(position);
 		if (hit.t() < tLight && hit.t() > Ops.epsilon) {
-			// theres shadow!!
+			// there's shadow!!
 			return 0;
 		}
 		// no shadow - check if ray is in the direction and angle of light
@@ -67,7 +65,7 @@ public class Spotlight extends PointLight {
 		double a = v.findAngleWith(u);
 		if (a < angle) {
 			// lit!
-			return 1;
+			return intensity.norm();
 		}
 		return 0;
 	}

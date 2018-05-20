@@ -45,7 +45,7 @@ public class PointLight extends Light {
 	@Override
 	public Vec calcIL(Point location) {
 		double d = location.dist(position);
-		double down = kc + kl * d + kq * d * d;
+		double down = kc + (kl * d) + (kq * (d * d));
 
 		return intensity.div(down);
 	}
@@ -57,13 +57,13 @@ public class PointLight extends Light {
 	}
 
 	@Override
-	public int calcSi(Hit hit, Ray ray) {
+	public double calcSi(Hit hit, Ray ray) {
 		Point originPoint = ray.source();
 		double tLight = originPoint.dist(position);
 		if (hit.t() < tLight && hit.t() > Ops.epsilon) {
 			// theres shadow!!
 			return 0;
 		}
-		return 1;
+		return intensity.norm();
 	}
 }
