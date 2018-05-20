@@ -106,11 +106,15 @@ public class Plain extends Shape {
         return alphaPlusBeta % 2 == 0 ? material.Kd1 : material.Kd2;
     }
 
-    private Point pointOnPlane() {
+    public Point pointOnPlane() {
         double x = -d * a;
         double y = -d * b;
         double z = -d * c;
         return new Point(x, y, z);
+    }
+
+    public boolean isPointOnPlane(Point p) {
+        return a * p.x + b * p.y + c * p.z == -d;
     }
 
     @Override
@@ -128,7 +132,6 @@ public class Plain extends Shape {
         double scalar = 1.0 / normalDotRay;
         Vec shever = Q0P0.mult(scalar);
         double t = normal().dot(shever);
-
         //checking which direction is the right one through the normal and its' opposite
         Vec Vneg = V.neg();
         if (normal().dot(Vneg) > 0) {
