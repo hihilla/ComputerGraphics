@@ -62,8 +62,9 @@ public class Spotlight extends PointLight {
 		Vec u = ray.direction().neg();
 		Vec v = direction;
 		// find angle between ray and direction. if smaller than angle of light - object is lit!
-		double a = v.findCosAngleWith(u);
-		if (a < angle) {
+		double theta = Math.acos(angle);
+		double a = v.findAngleWith(u);
+		if (a < theta) {
 			// lit!
 			return 1;
 		}

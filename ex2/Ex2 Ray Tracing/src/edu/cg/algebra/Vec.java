@@ -97,10 +97,10 @@ public class Vec {
 		return "(" + x + ", " + y + ", " + z + ")";
 	}
 
-	public double findCosAngleWith(Vec u) {
+	public double findAngleWith(Vec u) {
 		double down = u.norm() * this.length();
 		double up = this.dot(u);
 
-		return up / down;
+		return Math.acos(up / down);
 	}
 }
