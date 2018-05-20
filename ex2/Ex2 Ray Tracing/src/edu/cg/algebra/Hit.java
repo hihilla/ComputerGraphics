@@ -58,4 +58,9 @@ public class Hit implements Comparable<Hit> {
 	public int compareTo(Hit other) {
 		return t < other.t ? -1 : (t > other.t ? 1 : 0);
 	}
+
+	@Override
+	public String toString() {
+		return "t: " + t + ", normal to surface: " + normalToSurface.toString();
+	}
 }

@@ -107,18 +107,19 @@ public class Plain extends Shape {
     }
 
     private Point pointOnPlane() {
-        double x = -d / a;
-        double y = -d / b;
-        double z = -d / c;
+        double x = -d * a;
+        double y = -d * b;
+        double z = -d * c;
         return new Point(x, y, z);
     }
 
     @Override
     public Hit intersect(Ray ray) {
         // the ray is parallel to the plane
-        if (normal.dot(ray.direction()) == 0){
+        if (normal().dot(ray.direction()) == 0){
             return new Hit();
         }
+
         //finding t	according to formula
         Point Q0 = pointOnPlane();
         Vec Q0P0 = Q0.sub(ray.source());
@@ -126,14 +127,14 @@ public class Plain extends Shape {
         double normalDotRay = normal().dot(V);
         double scalar = 1.0 / normalDotRay;
         Vec shever = Q0P0.mult(scalar);
-        double t = normal.dot(shever);
+        double t = normal().dot(shever);
 
         //checking which direction is the right one through the normal and its' opposite
         Vec Vneg = V.neg();
-        if (normal.dot(Vneg) > 0) {
-            return new Hit(t, normal);
+        if (normal().dot(Vneg) > 0) {
+            return new Hit(t, normal());
         } else {
-            return new Hit(t, normal.neg());
+            return new Hit(t, normal().neg());
         }
     }
 

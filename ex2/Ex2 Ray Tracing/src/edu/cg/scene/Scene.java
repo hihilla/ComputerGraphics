@@ -217,7 +217,6 @@ public class Scene {
 			Ray lRay = light.getRayToLight(hittingPoint);
 			Vec Li = lRay.direction();
 			Vec Ii = light.calcIL(hittingPoint);
-			System.out.println("light  " + Ii.toColor().toString());
 
 			Vec first = surface.Kd(hittingPoint).mult(N.dot(Li));
 			Vec second = surface.calcPhong(N, V, Li);
@@ -225,6 +224,10 @@ public class Scene {
 			Vec sum = first.add(second);
 
             sigma = sigma.add(sum.mult(Ii).mult(calcSi(lRay, light)));
+		}
+
+		if (!renderReflections) {
+			return ambientColor.add(sigma);
 		}
 
 		// recursive part:

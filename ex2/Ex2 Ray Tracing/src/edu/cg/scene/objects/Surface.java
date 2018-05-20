@@ -35,10 +35,6 @@ public class Surface implements Intersectable {
 		Hit hit = shape.intersect(ray);
 		if (hit.successHit()) {
 			hit.setSurface(this);
-//			if (material.isCheckerBoard) {
-//				System.out.println("is checker board! " + shape.toString());
-//
-//			}
 		}
 		return hit;
 	}
