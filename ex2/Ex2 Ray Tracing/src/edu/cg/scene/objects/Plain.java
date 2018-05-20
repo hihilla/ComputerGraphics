@@ -1,11 +1,7 @@
 package edu.cg.scene.objects;
 
 import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Mat3x3;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 
 public class Plain extends Shape {
     //implicit form of a plain: ax + by + cz + d = 0;
