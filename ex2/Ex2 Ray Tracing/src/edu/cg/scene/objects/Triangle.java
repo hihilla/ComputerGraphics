@@ -6,8 +6,12 @@ import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Triangle extends Shape {
 	private Point p1, p2, p3;
+	private Plain plain;
 	
 	public Triangle() {
 		p1 = p2 = p3 = null;
@@ -17,6 +21,10 @@ public class Triangle extends Shape {
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
+	}
+
+	public Triangle(int a, int b, int c) {
+		this(new Point(a), new Point(b), new Point(c));
 	}
 	
 	@Override
@@ -30,34 +38,56 @@ public class Triangle extends Shape {
 
 	@Override
 	public Hit intersect(Ray ray) {
-		Vec V = ray.direction();
-		Point P0 = ray.source();
+		// create plain from triangle and intersect with it
+		Hit hit = plain().intersect(ray);
+		if (!hit.successHit()) {
+			// no hit
+			return hit;
+		}
 
-		Vec V1 = p1.sub(P0);
-		Vec V2 = p2.sub(P0);
-		Vec V3 = p3.sub(P0);
+		// check if inside triangle
+		// create the pyramid that connects P0 and triangle
+		Point p0 = ray.source();
+		Triangle[] pyramid = new Triangle[3];
+		pyramid[0] = new Triangle(p0, p1, p2);
+		pyramid[1] = new Triangle(p0, p2, p3);
+		pyramid[2] = new Triangle(p0, p3, p1);
 
-		Vec n1 = V1.cross(V2);
-		Vec n2 = V2.cross(V3);
-		Vec n3 = V3.cross(V1);
+		Point P = ray.getP(hit.t());
+		Ray rayToP = new Ray(p0, P);
+		boolean[] signs = new boolean[3];
+		int index = 0;
+		for (Triangle t: pyramid) {
+			signs[index++] = t.normal().dot(rayToP.direction()) > 0;
+		}
 
-		// if all normals turn in, dot product between rays vector and a normal will be positive.
-		// if all normals turn out, negative.
+		boolean allTrue = true;
+		boolean allFalse = true;
+		for (boolean sign: signs) {
+			allTrue &= sign;
+			allFalse &= !sign;
+		}
 
-		// p3-p1 and n1 has same direction -> tun in = true
-		Vec v13 = p3.sub(p1);
-		boolean turnIn = n1.dot(v13) > 0;
-		if (V.dot(n1) > 0 && turnIn) {
-			// hit!
-			Vec v12 = p2.sub(p1);
-			Vec N = v12.cross(v13).normalize();
-			// create plane with N and p1
-			Plain plain = new Plain(N, p1);
-			// return hit with plain
-			return plain.intersect(ray);
+		if (allTrue || allFalse) {
+			// normals to sides of pyramid says ray hits inside!
+			return hit;
 		}
 
 		// no hit
 		return new Hit();
+	}
+
+	private synchronized Plain plain() {
+		if (this.plain == null) {
+			Vec v2 = this.p2.sub(this.p1);
+			Vec v3 = this.p3.sub(this.p1);
+			Vec n = v2.cross(v3).normalize();
+			this.plain = new Plain(n, this.p1);
+		}
+		return this.plain;
+	}
+
+	private Vec normal() {
+		return this.plain().normal();
 	}
 }
