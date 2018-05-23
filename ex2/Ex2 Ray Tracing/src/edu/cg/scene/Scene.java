@@ -1,6 +1,12 @@
 package edu.cg.scene;
 
-import java.awt.Color;
+import edu.cg.Logger;
+import edu.cg.algebra.*;
+import edu.cg.algebra.Point;
+import edu.cg.scene.lightSources.Light;
+import edu.cg.scene.objects.Surface;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,12 +14,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import edu.cg.Logger;
-import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.*;
-import edu.cg.scene.lightSources.Light;
-import edu.cg.scene.objects.Surface;
 
 public class Scene {
 	private String name = "scene";

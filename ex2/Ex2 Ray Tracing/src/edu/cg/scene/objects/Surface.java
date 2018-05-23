@@ -1,13 +1,9 @@
 package edu.cg.scene.objects;
 
-import com.oracle.tools.packager.Log;
 import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
-import edu.cg.scene.lightSources.Light;
-
-import java.util.List;
 
 public class Surface implements Intersectable {
 	private Shape shape;

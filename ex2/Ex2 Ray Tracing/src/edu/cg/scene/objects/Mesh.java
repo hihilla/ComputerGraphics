@@ -1,14 +1,13 @@
 package edu.cg.scene.objects;
 
+import edu.cg.algebra.Hit;
+import edu.cg.algebra.Point;
+import edu.cg.algebra.Ray;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
 
 public class Mesh extends Shape implements Iterable<Triangle> {
 	public static class Triplet {

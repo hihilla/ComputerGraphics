@@ -1,13 +1,9 @@
 package edu.cg.scene.objects;
 
-import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Triangle extends Shape {
 	private Point p1, p2, p3;
@@ -38,56 +34,45 @@ public class Triangle extends Shape {
 
 	@Override
 	public Hit intersect(Ray ray) {
-		// create plain from triangle and intersect with it
-		Hit hit = plain().intersect(ray);
-		if (!hit.successHit()) {
-			// no hit
-			return hit;
-		}
+        // First, intersect ray with plane
+        // calc normal:
+        Vec v1 = p1.sub(p2);
+        Vec v2 = p3.sub(p2);
+        Vec temp = v2.cross(v1);
+        Vec N = temp.mult(1.0 / temp.length());
+        // calc hit
+        Vec V = ray.direction();
+        Point P0 = ray.source();
 
-		// check if inside triangle
-		// create the pyramid that connects P0 and triangle
-		Point p0 = ray.source();
-		Triangle[] pyramid = new Triangle[3];
-		pyramid[0] = new Triangle(p0, p1, p2);
-		pyramid[1] = new Triangle(p0, p2, p3);
-		pyramid[2] = new Triangle(p0, p3, p1);
+        Vec up = p1.sub(P0);
+        double down = N.dot(V);
+        Vec shever = up.mult(1.0 / down);
+        double t = N.dot(shever);
+        Point P = P0.add(t, V);
+        // Then, check if point is inside triangle
+        if (isInside(P0, P)) {
+            return new Hit(t, N);
+        }
 
-		Point P = ray.getP(hit.t());
-		Ray rayToP = new Ray(p0, P);
-		boolean[] signs = new boolean[3];
-		int index = 0;
-		for (Triangle t: pyramid) {
-			signs[index++] = t.normal().dot(rayToP.direction()) > 0;
-		}
+        // no hit?
+        return new Hit(0, new Vec());
+    }
 
-		boolean allTrue = true;
-		boolean allFalse = true;
-		for (boolean sign: signs) {
-			allTrue &= sign;
-			allFalse &= !sign;
-		}
+    private boolean isInside(Point P0, Point P) {
+        // Algebraic Method
+        Vec V1 = p1.sub(P0);
+        Vec V2 = p2.sub(P0);
+        Vec V3 = p3.sub(P0);
 
-		if (allTrue || allFalse) {
-			// normals to sides of pyramid says ray hits inside!
-			return hit;
-		}
+        Vec N1 = V2.cross(V1).mult(1.0 / V2.cross(V1).length());
+        Vec N2 = V3.cross(V2).mult(1.0 / V3.cross(V2).length());
+        Vec N3 = V1.cross(V3).mult(1.0 / V1.cross(V3).length());
 
-		// no hit
-		return new Hit();
-	}
+        Vec temp = P.sub(P0);
+        double sign1 = Math.signum(temp.dot(N1));
+        double sign2 = Math.signum(temp.dot(N2));
+        double sign3 = Math.signum(temp.dot(N3));
 
-	private synchronized Plain plain() {
-		if (this.plain == null) {
-			Vec v2 = this.p2.sub(this.p1);
-			Vec v3 = this.p3.sub(this.p1);
-			Vec n = v2.cross(v3).normalize();
-			this.plain = new Plain(n, this.p1);
-		}
-		return this.plain;
-	}
-
-	private Vec normal() {
-		return this.plain().normal();
-	}
+        return sign1 == sign2 && sign2 == sign3;
+    }
 }

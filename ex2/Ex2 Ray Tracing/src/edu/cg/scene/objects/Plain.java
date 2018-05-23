@@ -1,6 +1,5 @@
 package edu.cg.scene.objects;
 
-import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.*;
 
 public class Plain extends Shape {

@@ -33,8 +33,4 @@ public class Ray {
 	public Ray inverse() {
 		return new Ray(source, direction.neg());
 	}
-
-	public Point getP(double t) {
-		return add(t);
-	}
 }
