@@ -112,7 +112,7 @@ public class Plain extends Shape {
     public boolean isPointOnPlane(Point p) {
         return normal().dot(p.sub(pointOnPlane())) == 0;
     }
-    
+
     @Override
     public Hit intersect(Ray ray) {
 

@@ -124,7 +124,7 @@ public class Scene {
 			deltaY = (max - height) / 2;
 		}
 
-		Point transform(int x, int y) {
+		Point transform(double x, double y) {
 			double xPos = (2*(x + deltaX) - max) / ((double)max);
 			double yPos = (max - 2*(y + deltaY)) / ((double)max);
 			return new Point(xPos, yPos, 0);
@@ -186,11 +186,46 @@ public class Scene {
 
 	private Future<Color> calcColor(int x, int y) {
 		return executor.submit(() -> {
-			//TODO: change this method implementation to implement super sampling
-			Point pointOnScreenPlain = transformaer.transform(x, y);
-			Ray ray = new Ray(camera, pointOnScreenPlain);
-			return calcColor(ray, 0).toColor();
+			int alpha = antiAliasingFactor;
+
+			if (alpha == 1){
+				Point pointOnScreenPlain = transformaer.transform(x, y);
+				Ray ray = new Ray(camera, pointOnScreenPlain);
+				Color color = calcColor(ray, 0).toColor();
+				return color;
+			}
+
+			float sumX = 0;
+			float sumY = 0;
+			float sumZ = 0;
+			for (int i = 0; i < alpha; i++){
+				for (int j = 0; j < alpha; j++){
+					Point pointOnScreenPlain = transformaer.transform(x + i/(alpha*alpha), y + j/(alpha*alpha));
+					Ray ray = new Ray(camera, pointOnScreenPlain);
+					Color color = calcColor(ray, 0).toColor();
+					sumX += color.getRed();
+					sumY += color.getGreen();
+					sumZ += color.getBlue();
+					if (i == j && i == alpha)
+					System.out.println(sumX+ " " + sumY + " " + sumZ);
+				}
+			}
+
+			float avgX = sumX / (float)Math.pow(alpha, 2);
+			float avgY = sumY / (float)Math.pow(alpha, 2);
+			float avgZ = sumZ / (float)Math.pow(alpha, 2);
+			//System.out.println(avgX+ " " + avgY + " " + avgZ);
+
+			Color avgColor = new Color(getColorWeight(avgX), getColorWeight(avgY), getColorWeight(avgZ));
+
+			return avgColor;
 		});
+
+
+	}
+
+	public float getColorWeight(float color) {
+		return (float) (color / 255.0);
 	}
 
 	/**
