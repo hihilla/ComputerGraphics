@@ -19,6 +19,11 @@ public class Plain extends Shape {
         this.d = d;
     }
 
+    public Plain(Point p1, Point p2, Point p3) {
+
+        this(p2.sub(p1).cross(p3.sub(p1)).normalize(), p1);
+    }
+
     public Plain(Vec normal, Point p0) {
         this(normal.x, normal.y, normal.z, -normal.dot(p0.toVec()));
     }

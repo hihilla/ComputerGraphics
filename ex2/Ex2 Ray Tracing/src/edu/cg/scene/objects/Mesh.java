@@ -1,6 +1,7 @@
 package edu.cg.scene.objects;
 
 import edu.cg.algebra.Hit;
+import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 
@@ -84,15 +85,20 @@ public class Mesh extends Shape implements Iterable<Triangle> {
 	@Override
 	public Hit intersect(Ray ray) {
 		Iterator it = iterator();
+
+		Hit minimumHit = new Hit();
+
+		double minT = Double.MAX_VALUE;
+
 		while (it.hasNext()) {
 			Triangle cur = (Triangle) it.next();
-			Hit hit = cur.intersect(ray);
-			if (hit.successHit()) {
-				return hit;
+			Hit curHit = cur.intersect(ray);
+			if (curHit.t() < minT && curHit.t() > Ops.epsilon && curHit.successHit()) {
+				minT = curHit.t();
+				minimumHit = curHit;
 			}
 		}
 
-		return new Hit();
+		return minimumHit;
 	}
-
 }
