@@ -1,6 +1,5 @@
 package edu.cg.scene.objects;
 
-import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.*;
 
 public class Plain extends Shape {
@@ -115,49 +114,25 @@ public class Plain extends Shape {
 
     @Override
     public Hit intersect(Ray ray) {
+        Vec ABC = new Vec(new Vec(a, b, c));
+        Vec R = ray.direction();
+        double VdotN = R.dot(ABC);
 
-        Vec normal = new Vec(new Vec(a, b, c));
+        Point R0 = ray.source();
+        double V0 = (ABC.dot(R0.toVec()) + d) * -1;
+        double t = V0 / VdotN;
 
-        double Vd = ray.direction().dot(normal);
+        if (t < Ops.epsilon || t > Ops.infinity)
+            return new Hit();
 
-            double V0 = (normal.dot(ray.source().toVec()) + d)* - 1;
-            double t = V0 / Vd;
+        double RdotN = R.dot(normal());
 
-            if (t < Ops.epsilon || t > Ops.infinity)
-                return new Hit();
-
-            double dotProduct = ray.direction().dot(normal());
-
-            if (dotProduct > 0) {
-                return new Hit(t, normal().neg());
-            }
-
-            return new Hit(t, normal());
-
+        if (RdotN > 0) {
+            return new Hit(t, normal().neg());
         }
-        // the ray is parallel to the plane
-//        if (normal().dot(ray.direction()) == 0){
-//            return new Hit();
-//        }
-//
-//        //finding t	according to formula
-//        Point Q0 = pointOnPlane();
-//        Vec Q0P0 = Q0.sub(ray.source());
-//        Vec V = ray.direction();
-//        double normalDotRay = normal().dot(V);
-//        double scalar = 1.0 / normalDotRay;
-//        Vec shever = Q0P0.mult(scalar);
-//        double t = normal().dot(shever);
-//
-//        if (t < Ops.epsilon || t > Ops.infinity){
-//            return new Hit();
-//        }
-//        //checking which direction is the right one through the normal and its' opposite
-//        Vec Vneg = V.neg();
-//        if (normal().dot(Vneg) > 0) {
-//            return new Hit(t, normal());
-//        } else {
-//            return new Hit(t, normal().neg());
+
+        return new Hit(t, normal());
+    }
 
 
     public double getA() {

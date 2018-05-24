@@ -33,5 +33,4 @@ public class Ray {
 	public Ray inverse() {
 		return new Ray(source, direction.neg());
 	}
-	
 }
