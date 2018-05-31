@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Point;
 
 import com.jogamp.opengl.*;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import edu.cg.algebra.Vec;
@@ -24,7 +23,7 @@ public class Viewer implements GLEventListener {
     private Component glPanel; //We store the OpenGL panel component object to refresh the scene
     private boolean isModelCamera = false; //Whether the camera is relative to the model, rather than the world (ex6)
     private boolean isModelInitialized = false; //Whether model.init() was called.
-    double[] rotationMatrix = new double[]{1.0, 0.0, 0.0, 0.0,
+    private double[] rotationMatrix = new double[]{1.0, 0.0, 0.0, 0.0,
             0.0, 1.0, 0.0, 0.0,
             0.0, 0.0, 1.0, 0.0,
             0.0, 0.0, 0.0, 1.0};
@@ -32,7 +31,6 @@ public class Viewer implements GLEventListener {
     // Remember the width and height of the canvas for the trackball.
     private int canWidth = 0;
     private int canHeight = 0;
-    private GLU glu = new GLU();
 
     public Viewer(Component glPanel) {
         this.glPanel = glPanel;
