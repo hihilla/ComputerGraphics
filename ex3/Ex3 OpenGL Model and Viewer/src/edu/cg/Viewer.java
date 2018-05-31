@@ -274,5 +274,4 @@ public class Viewer implements GLEventListener {
         this.model = model;
         isModelInitialized = false;
     }
-
 }
