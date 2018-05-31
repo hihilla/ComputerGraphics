@@ -156,8 +156,22 @@ public class Viewer implements GLEventListener {
         canWidth = width;
         canHeight = height;
 
+        GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
 
+        if (width == 0) width = 1;   // prevent divide by zero
+        float aspect = (float)height / width;
 
+        // Set the view port (display area) to cover the entire window
+        gl.glViewport(0, 0, width, height);
+
+        // Setup perspective projection, with aspect ratio matches viewport
+        gl.glMatrixMode(GL2.GL_PROJECTION);  // choose projection matrix
+        gl.glLoadIdentity();             // reset projection matrix
+        glu.gluPerspective(45.0, aspect, 01, 1000); // fovy, aspect, zNear, zFar
+// gl.glFrustum(-0.1, 0.1, -0.1 * aspect, 0.1 * aspect, 0.1, 1000.0);
+        // Enable the model-view transform
+//        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity(); // reset
     }
 
 	/**
