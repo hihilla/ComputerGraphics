@@ -27,9 +27,11 @@ public class Dome extends Shape {
 		Hit hit = sphere.intersect(ray);
 		// only sphere in the plains normal side count!
 		// if the dot product is positive, the hit is in the dome side
-		double product = plain.normal().dot(hit.getNormalToSurface());
-		if (product >= 0) {
-			return hit;
+		if(hit != null) {
+			double product = plain.normal().dot(hit.getNormalToSurface());
+			if (product >= 0) {
+				return hit;
+			}
 		}
 
 		// check if hit is on the plane

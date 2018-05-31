@@ -195,33 +195,18 @@ public class Scene {
 				return color;
 			}
 
-			float sumX = 0;
-			float sumY = 0;
-			float sumZ = 0;
+			Vec color = new Vec();
+
 			for (int i = 0; i < alpha; i++){
 				for (int j = 0; j < alpha; j++){
 					Point pointOnScreenPlain = transformaer.transform(x + i/(alpha*alpha), y + j/(alpha*alpha));
 					Ray ray = new Ray(camera, pointOnScreenPlain);
-					Color color = calcColor(ray, 0).toColor();
-					sumX += color.getRed();
-					sumY += color.getGreen();
-					sumZ += color.getBlue();
-					if (i == j && i == alpha)
-					System.out.println(sumX+ " " + sumY + " " + sumZ);
+					color = color.add(calcColor(ray, 0));
 				}
 			}
 
-			float avgX = sumX / (float)Math.pow(alpha, 2);
-			float avgY = sumY / (float)Math.pow(alpha, 2);
-			float avgZ = sumZ / (float)Math.pow(alpha, 2);
-			//System.out.println(avgX+ " " + avgY + " " + avgZ);
-
-			Color avgColor = new Color(getColorWeight(avgX), getColorWeight(avgY), getColorWeight(avgZ));
-
-			return avgColor;
+			return color.mult(1.0 / ((double) alpha * (double) alpha)).toColor();
 		});
-
-
 	}
 
 	public float getColorWeight(float color) {
@@ -239,7 +224,7 @@ public class Scene {
 		Hit hit = findIntersection(ray);
 
 		// if ray doesn't hit anything - return background color
-		if (!hit.successHit()) {
+		if (hit == null || !hit.successHit()) {
 			return backgroundColor;
 		}
 		Point hittingPoint = ray.getHittingPoint(hit);
@@ -285,6 +270,9 @@ public class Scene {
 		Hit hit = new Hit();
 		for (Surface surface: surfaces) {
 			Hit curHit = surface.intersect(ray);
+
+			if (curHit == null) continue;
+
 			if (curHit.t() < minT && curHit.t() > Ops.epsilon) {
 				minT = curHit.t();
 				hit = curHit;
