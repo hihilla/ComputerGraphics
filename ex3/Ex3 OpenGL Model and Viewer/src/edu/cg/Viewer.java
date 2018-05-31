@@ -25,6 +25,10 @@ public class Viewer implements GLEventListener {
 	private Component glPanel; //We store the OpenGL panel component object to refresh the scene
 	private boolean isModelCamera = false; //Whether the camera is relative to the model, rather than the world (ex6)
 	private boolean isModelInitialized = false; //Whether model.init() was called.
+    double[] rotationMatrix = new double[]{1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0};
 
     // Remember the width and height of the canvas for the trackball.
     private int canWidth = 0;
@@ -65,13 +69,23 @@ public class Viewer implements GLEventListener {
 	}
 
     private Vec projectPoint(Point p) {
-        double x = (2.0 * p.x / canWidth) - 1;
-        double y = 1 - (2.0 * p.y / canHeight);
-        double z = 2 - Math.pow(x, 2) - Math.pow(y, 2);
-        if (z < 0) { z = 0;}
-        z = Math.sqrt(z);
-        Vec vecOfMouse = new Vec(x, y, z).normalize();
-        return vecOfMouse;
+//        double x = (2.0 * p.x / canWidth) - 1;
+//        double y = 1 - (2.0 * p.y / canHeight);
+//        double z = 2 - Math.pow(x, 2) - Math.pow(y, 2);
+//        if (z < 0) { z = 0;}
+//        z = Math.sqrt(z);
+//        Vec vecOfMouse = new Vec(x, y, z).normalize();
+//        return vecOfMouse;
+
+        double x = (double)(2 * p.x) / (double)this.canWidth - 1.0D;
+        double y = 1.0D - (double)(2 * p.y) / (double)this.canHeight;
+        double z2 = 2.0D - x * x - y * y;
+        if(z2 < 0.0D) {
+            z2 = 0.0D;
+        }
+
+        double z = Math.sqrt(z2);
+        return (new Vec(x, y, z)).normalize();
     }
 
 
@@ -83,27 +97,23 @@ public class Viewer implements GLEventListener {
 			//		Relevant functions: glGetDoublev, glMultMatrixd
 			//      Example: gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
             gl.glLoadIdentity();
-            if ((mouseFrom != null) && (mouseTo != null)) {
-                Vec from = projectPoint(mouseFrom);
-                Vec to = projectPoint(mouseTo);
+            if(this.mouseFrom != null && this.mouseTo != null) {
+                Vec from = this.projectPoint(this.mouseFrom);
+                Vec to = this.projectPoint(this.mouseTo);
                 Vec axis = from.cross(to).normalize();
-                if (axis.isFinite()) {
-                    double angle = 57.29577951308232D * Math.acos(from.dot(to));
-                    angle = Double.isFinite(angle) ? angle : 0.0D;
-                    gl.glRotated(angle, from.x, from.y, from.z);
+                if(axis.isFinite()) {
+                    double angle = 57.29577951308232D * Math.acos((double)from.dot(to));
+                    angle = Double.isFinite(angle)?angle:0.0D;
+                    gl.glRotated(angle, (double)axis.x, (double)axis.y, (double)axis.z);
                 }
             }
-            double[] rotationMatrix = { 1.0D, 0.0D, 0.0D, 0.0D,
-                    0.0D, 1.0D, 0.0D, 0.0D,
-                    0.0D, 0.0D, 1.0D, 0.0D,
-                    0.0D, 0.0D, 0.0D, 1.0D };
-            gl.glMultMatrixd(rotationMatrix, 0);
-            gl.glGetDoublev(2982, rotationMatrix, 0);
 
+            gl.glMultMatrixd(this.rotationMatrix, 0);
+            gl.glGetDoublev(2982, this.rotationMatrix, 0);
             gl.glLoadIdentity();
             gl.glTranslated(0.0D, 0.0D, -1.2D);
-            gl.glTranslated(0.0D, 0.0D, -zoom);
-            gl.glMultMatrixd(rotationMatrix, 0);
+            gl.glTranslated(0.0D, 0.0D, -this.zoom);
+            gl.glMultMatrixd(this.rotationMatrix, 0);
 			
 			//By this point, we should have already changed the point of view, now set these to null
 			//so we don't change it again on the next redraw.
@@ -156,22 +166,15 @@ public class Viewer implements GLEventListener {
         canWidth = width;
         canHeight = height;
 
-        GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
+        GL2 gl = drawable.getGL().getGL2();
 
-        if (width == 0) width = 1;   // prevent divide by zero
+        // prevent divide by zero
+        if (width == 0) width = 1;
         float aspect = (float)height / width;
 
-        // Set the view port (display area) to cover the entire window
-        gl.glViewport(0, 0, width, height);
-
-        // Setup perspective projection, with aspect ratio matches viewport
-        gl.glMatrixMode(GL2.GL_PROJECTION);  // choose projection matrix
-        gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45.0, aspect, 01, 1000); // fovy, aspect, zNear, zFar
-// gl.glFrustum(-0.1, 0.1, -0.1 * aspect, 0.1 * aspect, 0.1, 1000.0);
-        // Enable the model-view transform
-//        gl.glMatrixMode(GL2.GL_MODELVIEW);
-        gl.glLoadIdentity(); // reset
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+        gl.glFrustum(-.1, .1, -.1 * aspect, .1 * aspect, .1, 1000);
     }
 
 	/**
