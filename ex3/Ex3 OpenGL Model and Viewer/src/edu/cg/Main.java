@@ -23,7 +23,7 @@ import edu.cg.models.*;
 
 public class Main {
 	
-	static IRenderable[] models = {new Empty()};
+	static IRenderable[] models = {new Cube(), new Empty()};
 	static Point prevMouse;
 	static int currentModel;
 	static Frame frame;
@@ -124,6 +124,7 @@ public class Main {
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
+				System.out.println("mouse pressed");
 				prevMouse = e.getPoint();
 				viewer.startAnimation();
 				super.mousePressed(e);
@@ -131,6 +132,7 @@ public class Main {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				System.out.println("mouse released");
 				viewer.stopAnimation();
 				super.mouseReleased(e);
 			}

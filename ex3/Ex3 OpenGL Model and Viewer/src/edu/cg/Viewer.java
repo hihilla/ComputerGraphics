@@ -4,8 +4,10 @@ import java.awt.Component;
 import java.awt.Point;
 
 import com.jogamp.opengl.*;
+import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
+import edu.cg.algebra.Vec;
 import edu.cg.models.IRenderable;
 
 /**
@@ -23,7 +25,11 @@ public class Viewer implements GLEventListener {
 	private Component glPanel; //We store the OpenGL panel component object to refresh the scene
 	private boolean isModelCamera = false; //Whether the camera is relative to the model, rather than the world (ex6)
 	private boolean isModelInitialized = false; //Whether model.init() was called.
-	
+
+    // Remember the width and height of the canvas for the trackball.
+    private int canWidth = 0;
+    private int canHeight = 0;
+    private GLU glu = new GLU();
 
 	public Viewer(Component glPanel) {
 		this.glPanel = glPanel;
@@ -37,13 +43,20 @@ public class Viewer implements GLEventListener {
 			isModelInitialized = true;
 		}
 		//TODO: uncomment the following line to clear the window before drawing
-		//gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		setupCamera(gl);
 		if (isAxes)
 			renderAxes(gl);
 		
-		//TODO: set wireframe mode
+		// set wireframe mode
+        if (isWireframe) {
+            // display wireframe
+            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+        } else {
+            // don't display wireframe
+            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+        }
 
 		model.render(gl);
 		
@@ -51,14 +64,46 @@ public class Viewer implements GLEventListener {
 		gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
 	}
 
-	private void setupCamera(GL2 gl) {
+    private Vec projectPoint(Point p) {
+        double x = (2.0 * p.x / canWidth) - 1;
+        double y = 1 - (2.0 * p.y / canHeight);
+        double z = 2 - Math.pow(x, 2) - Math.pow(y, 2);
+        if (z < 0) { z = 0;}
+        z = Math.sqrt(z);
+        Vec vecOfMouse = new Vec(x, y, z).normalize();
+        return vecOfMouse;
+    }
+
+
+    private void setupCamera(GL2 gl) {
 		if (!isModelCamera) { //Camera is in an absolute location
 			//TODO: place the camera. You should use mouseFrom, mouseTo, canvas width and
 			//      height (reshape function), zoom etc. This should actually implement the trackball
 			//		and zoom. You might want to store the rotation matrix in an array for next time.
 			//		Relevant functions: glGetDoublev, glMultMatrixd
 			//      Example: gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
-			
+            gl.glLoadIdentity();
+            if ((mouseFrom != null) && (mouseTo != null)) {
+                Vec from = projectPoint(mouseFrom);
+                Vec to = projectPoint(mouseTo);
+                Vec axis = from.cross(to).normalize();
+                if (axis.isFinite()) {
+                    double angle = 57.29577951308232D * Math.acos(from.dot(to));
+                    angle = Double.isFinite(angle) ? angle : 0.0D;
+                    gl.glRotated(angle, from.x, from.y, from.z);
+                }
+            }
+            double[] rotationMatrix = { 1.0D, 0.0D, 0.0D, 0.0D,
+                    0.0D, 1.0D, 0.0D, 0.0D,
+                    0.0D, 0.0D, 1.0D, 0.0D,
+                    0.0D, 0.0D, 0.0D, 1.0D };
+            gl.glMultMatrixd(rotationMatrix, 0);
+            gl.glGetDoublev(2982, rotationMatrix, 0);
+
+            gl.glLoadIdentity();
+            gl.glTranslated(0.0D, 0.0D, -1.2D);
+            gl.glTranslated(0.0D, 0.0D, -zoom);
+            gl.glMultMatrixd(rotationMatrix, 0);
 			
 			//By this point, we should have already changed the point of view, now set these to null
 			//so we don't change it again on the next redraw.
@@ -71,9 +116,7 @@ public class Viewer implements GLEventListener {
 	}
 	
 	@Override
-	public void dispose(GLAutoDrawable drawable) {
-		// TODO Typically there's nothing to do here
-	}
+	public void dispose(GLAutoDrawable drawable) { }
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
@@ -81,8 +124,8 @@ public class Viewer implements GLEventListener {
 
 		// Initialize display callback timer
 		//TODO Uncomment the following lines to create an animator object and attach it to the canvas.
-		//ani = new FPSAnimator(30, true);
-		//ani.add(drawable);
+		ani = new FPSAnimator(30, true);
+		ani.add(drawable);
 		
 		glPanel.repaint();
 		
@@ -90,10 +133,14 @@ public class Viewer implements GLEventListener {
 	}
 	
 	public void initModel(GL2 gl) {
-		//TODO: light model, normal normalization, depth test, back face culling, ...
+		// light model, normal normalization, depth test, back face culling, ...
+        gl.glLightModelf(GL2.GL_LIGHT_MODEL_TWO_SIDE, 1); // light model
+        gl.glEnable(GL2.GL_NORMALIZE); // normalize
+        gl.glEnable(GL2.GL_DEPTH_TEST); // depth test
+
 		
-		//gl.glCullFace(GL2.GL_BACK);    // Set Culling Face To Back Face
-        //gl.glEnable(GL2.GL_CULL_FACE); // Enable back face culling
+		gl.glCullFace(GL2.GL_BACK);    // Set Culling Face To Back Face
+        gl.glEnable(GL2.GL_CULL_FACE); // Enable back face culling
 		
 		model.init(gl);
 		
@@ -105,9 +152,23 @@ public class Viewer implements GLEventListener {
 
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		//TODO: Remember the width and height of the canvas for the trackball.
-		//TODO: Set the projection to perspective.
-	}
+		// Remember the width and height of the canvas for the trackball.
+        canWidth = width;
+        canHeight = height;
+
+        final GL2 gl = drawable.getGL().getGL2();
+        if( height <= 0 )
+        height = 1;
+
+        final float h = ( float ) width / ( float ) height;
+        gl.glViewport( 0, 0, width, height );
+        gl.glMatrixMode( GL2.GL_PROJECTION );
+        gl.glLoadIdentity();
+
+        glu.gluPerspective( 45.0f, h, 1.0, 20.0 );
+        gl.glMatrixMode( GL2.GL_MODELVIEW );
+        gl.glLoadIdentity();
+    }
 
 	/**
 	 * Stores the mouse coordinates for trackball rotation.
@@ -175,8 +236,8 @@ public class Viewer implements GLEventListener {
 	 */
 	public void startAnimation() {
 		//TODO Uncomment these lines to animate the model 
-		//if (!ani.isAnimating())
-		//	ani.start();
+		if (!ani.isAnimating())
+			ani.start();
 	}
 	
 	/**
@@ -184,8 +245,8 @@ public class Viewer implements GLEventListener {
 	 */
 	public void stopAnimation() {
 		//TODO Uncomment these lines to stop animating the model 
-		//if (ani.isAnimating())
-		//	ani.stop();
+		if (ani.isAnimating())
+			ani.stop();
 	}
 	
 	private void renderAxes(GL2 gl) {
