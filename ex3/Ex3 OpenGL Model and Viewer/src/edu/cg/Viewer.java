@@ -47,8 +47,10 @@ public class Viewer implements GLEventListener {
 			isModelInitialized = true;
 		}
 		//TODO: uncomment the following line to clear the window before drawing
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-
+//		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        gl.glClearColor(1.0F, 1.0F, 1.0F, 1.0F);
+        gl.glClear(16640);
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
 		setupCamera(gl);
 		if (isAxes)
 			renderAxes(gl);
@@ -144,9 +146,10 @@ public class Viewer implements GLEventListener {
 	
 	public void initModel(GL2 gl) {
 		// light model, normal normalization, depth test, back face culling, ...
-        gl.glLightModelf(GL2.GL_LIGHT_MODEL_TWO_SIDE, 1); // light model
+        gl.glLightModelf(GL2.GL_LIGHT_MODEL_TWO_SIDE, 1.0f); // light model
         gl.glEnable(GL2.GL_NORMALIZE); // normalize
         gl.glEnable(GL2.GL_DEPTH_TEST); // depth test
+        gl.glEnable(2896);
 
 		
 		gl.glCullFace(GL2.GL_BACK);    // Set Culling Face To Back Face
@@ -169,7 +172,7 @@ public class Viewer implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
 
         // prevent divide by zero
-        if (width == 0) width = 1;
+//        if (width == 0) width = 1;
         float aspect = (float)height / width;
 
         gl.glMatrixMode(GL2.GL_PROJECTION);
