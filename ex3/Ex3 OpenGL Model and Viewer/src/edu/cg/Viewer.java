@@ -6,6 +6,7 @@ import java.awt.Point;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.FPSAnimator;
 
+import edu.cg.algebra.Vec;
 import edu.cg.models.IRenderable;
 
 /**
@@ -51,6 +52,17 @@ public class Viewer implements GLEventListener {
 		gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
 	}
 
+	private Vec pointerAsVector(Point p) {
+		double x = (2 * p.x / canWidth) - 1.0;
+		double y = 1.0 - (2 * p.y / canHeight);
+		double z = 2.0 - Math.pow(x, 2) - Math.pow(y, 2);
+		if (z < 0.0)
+			z = 0.0;
+		z = Math.sqrt(z);
+		Vec vecOfMouse = new Vec(x, y, z).normalize();
+		return vecOfMouse;
+	}
+
 	private void setupCamera(GL2 gl) {
 		if (!isModelCamera) { //Camera is in an absolute location
 			//TODO: place the camera. You should use mouseFrom, mouseTo, canvas width and
@@ -58,6 +70,7 @@ public class Viewer implements GLEventListener {
 			//		and zoom. You might want to store the rotation matrix in an array for next time.
 			//		Relevant functions: glGetDoublev, glMultMatrixd
 			//      Example: gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
+
 			
 			
 			//By this point, we should have already changed the point of view, now set these to null
