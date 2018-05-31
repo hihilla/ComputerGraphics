@@ -124,7 +124,6 @@ public class Main {
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				System.out.println("mouse pressed");
 				prevMouse = e.getPoint();
 				viewer.startAnimation();
 				super.mousePressed(e);
@@ -132,7 +131,6 @@ public class Main {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				System.out.println("mouse released");
 				viewer.stopAnimation();
 				super.mouseReleased(e);
 			}

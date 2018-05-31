@@ -156,18 +156,8 @@ public class Viewer implements GLEventListener {
         canWidth = width;
         canHeight = height;
 
-        final GL2 gl = drawable.getGL().getGL2();
-        if( height <= 0 )
-        height = 1;
 
-        final float h = ( float ) width / ( float ) height;
-        gl.glViewport( 0, 0, width, height );
-        gl.glMatrixMode( GL2.GL_PROJECTION );
-        gl.glLoadIdentity();
 
-        glu.gluPerspective( 45.0f, h, 1.0, 20.0 );
-        gl.glMatrixMode( GL2.GL_MODELVIEW );
-        gl.glLoadIdentity();
     }
 
 	/**
