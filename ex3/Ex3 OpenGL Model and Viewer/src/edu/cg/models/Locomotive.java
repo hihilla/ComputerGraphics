@@ -35,12 +35,65 @@ public class Locomotive implements IRenderable {
     }
 
     @Override
-    public void init(GL2 gl) {
+    public void init(GL2 gl) { }
+
+    @Override
+    public void setCamera(GL2 gl) { }
+
+    /**
+     * Chassis – The body of the locomotive. Filled polygons.
+     ▪ Door – Filled polygon.
+     ▪ Windows – Filled polygons
+     */
+    private void drawChassis() {
+        drawDoor();
+        drawWindows();
 
     }
 
-    @Override
-    public void setCamera(GL2 gl) {
+    private void drawDoor() {
 
+    }
+
+    private void drawWindows() {
+
+    }
+
+    /**
+     * Wheels
+     ▪ Wheel – Cylinder bounded by disks.
+     */
+    private void drawWeels() {
+
+    }
+
+    /**
+     * Lights
+     ▪ Front light – Cylinder bounded by disk.
+     */
+    private void drawLights() {
+
+    }
+
+    /**
+     * Roof – Non-uniformly scaled cylinder bounded by disks.
+     */
+    private void drawRoof() {
+
+    }
+
+    /**
+     * Chimney – Two cylinders place on top of each other bounded by disks.
+     */
+    private void drawChimney() {
+
+    }
+
+    private void draeLocomotive() {
+        drawChassis();
+        drawWeels();
+        drawLights();
+        drawRoof();
+        drawChimney();
     }
 }
