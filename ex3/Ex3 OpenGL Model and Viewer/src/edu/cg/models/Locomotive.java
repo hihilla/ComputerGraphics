@@ -61,7 +61,7 @@ public class Locomotive implements IRenderable {
         drawWindowFrontRight(gl);
         drawShimsha(gl);
         drawRearShimsha(gl);
-        drawWindowCloserToDoor(gl);
+        drawWindowsCloserToDoor(gl);
 
         drawDoor(gl);
 
@@ -73,7 +73,6 @@ public class Locomotive implements IRenderable {
         gl.glColor3f(1f,0f,0f); //red color
 
         gl.glVertex3f(.5f, .2f, .2f);
-        gl.glVertex3f(.5f, -.2f, .2f);
         gl.glVertex3f(.5f, -.2f, .2f);
         gl.glVertex3f(.5f, -.2f, -.2f);
         gl.glVertex3f(.5f, .2f, -.2f);
@@ -218,69 +217,33 @@ public class Locomotive implements IRenderable {
 
     }
 
-
     private void drawDoor(GL2 gl) {
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor3f(0, 0, 0); // black door
-        gl.glVertex3f(-0.2f, 0.15f, -0.21f); // top left
-        gl.glVertex3f(-0.05f, 0.15f, -0.21f); // top right
-        gl.glVertex3f(-0.05f, -0.2f, -0.21f); // bottom right
-        gl.glVertex3f(-0.2f, -0.2f, -0.21f); // bottom right
+        gl.glVertex3f(-0.2f, 0.15f, -0.201f); // top left
+        gl.glVertex3f(-0.05f, 0.15f, -0.201f); // top right
+        gl.glVertex3f(-0.05f, -0.2f, -0.201f); // bottom right
+        gl.glVertex3f(-0.2f, -0.2f, -0.201f); // bottom right
 
         gl.glEnd();
     }
 
-    private void drawWindowCloserToDoor(GL2 gl) {
+    private void drawWindowsCloserToDoor(GL2 gl) {
         gl.glBegin(GL2.GL_QUADS);
-        gl.glColor3f(0, 0, 0);
-        gl.glVertex3f(-0.05f, 0.15f, -0.21f); // top right
-        gl.glVertex3f(-0.15f, 0.15f, -0.21f); // top left
-        gl.glVertex3f(-0.15f, -0.05f, -0.21f); // bottom left
-        gl.glVertex3f(-0.05f , -0.05f, -0.21f); // bottom right
+        gl.glColor3f(0, 0, 0); // black door
+        gl.glVertex3f(0.2f, 0.15f, -0.201f); // top left
+        gl.glVertex3f(0.2f, -0.05f, -0.201f); // bottom right
+        gl.glVertex3f(0.05f, -0.05f, -0.201f); // bottom right
+        gl.glVertex3f(0.05f, 0.15f, -0.201f); // top right
+
+        gl.glVertex3f(0.45f, 0.15f, -0.201f); // top left
+        gl.glVertex3f(0.45f, -0.05f, -0.201f); // bottom right
+        gl.glVertex3f(0.3f, -0.05f, -0.201f); // bottom right
+        gl.glVertex3f(0.3f, 0.15f, -0.201f); // top right
+
         gl.glEnd();
     }
 
-    private void drawWindowFurtherFormDoor(GL2 gl){
-        gl.glBegin(GL2.GL_QUADS);
-        gl.glColor3f(0, 0, 0);
-        gl.glVertex3f(-0.3f, 0.15f, 0);
-        gl.glVertex3f(-0.45f, 0.15f, 0);
-        gl.glVertex3f(-0.45f, -0.05f, 0);
-        gl.glVertex3f(-0.3f, -0.05f, 0);
-        gl.glEnd();
-    }
-
-    private void drawSideWithDoor(GL2 gl){
-        // chassis somehow...
-
-        gl.glFrontFace(2305);
-        gl.glBegin(GL2.GL_QUADS);
-        // bigger rectangle
-        gl.glColor3f(1, 0, 0);
-        gl.glColor3f(1, 0, 0);
-        gl.glVertex3f(0.3f, 0.2f, 0.2f);
-        gl.glVertex3f(-0.5f, 0.2f, 0.2f);
-        gl.glVertex3f(-0.5f, -0.2f, 0.2f);
-        gl.glVertex3f(0.3f, -0.2f, 0.2f);
-
-        // smaller rectangle
-        gl.glColor3f(1, 0 ,0);
-        gl.glVertex3f(0.8f, 0, 0.2f);
-        gl.glVertex3f(0.3f, 0, 0.2f);
-        gl.glVertex3f(0.3f, -0.2f, 0.2f);
-        gl.glVertex3f(0.8f, -0.2f, 0.2f);
-        gl.glEnd();
-
-        // door and windows
-        gl.glPushMatrix();
-        gl.glTranslated(0, 0, 0.2f);
-        drawDoor(gl);
-        drawWindowCloserToDoor(gl);
-//        gl.glTranslated(0, 0, 0.202f);
-        drawWindowFurtherFormDoor(gl);
-
-        gl.glPopMatrix();
-    }
 
     /**
      * Wheels
@@ -420,17 +383,17 @@ public class Locomotive implements IRenderable {
 
         // closing disk
         gl.glRotated(180, 1, 0, 0);
-        glu.gluDisk(q, 0, .2, 10, 1);
+        glu.gluDisk(q, 0, .21, 10, 1);
         gl.glRotated(-180, 1, 0, 0);
 
         // roof cylinder
-        glu.gluCylinder(q, .2, .2, .8, 10, 1);
+        glu.gluCylinder(q, .21, .21, .8, 10, 1);
 
         // move to end of roof
         gl.glTranslated(0, 0, .8);
 
         // closing disk
-        glu.gluDisk(q, 0, .2, 10, 1);
+        glu.gluDisk(q, 0, .21, 10, 1);
         gl.glPopMatrix();
     }
 

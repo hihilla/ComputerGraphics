@@ -14,8 +14,6 @@ public class Netta implements IRenderable {
         GLU glu = new GLU();
         GLUquadric q = glu.gluNewQuadric();
 
-        gl.glClearColor(.87F, .37F, .97F, 1F);
-
         drawGulguls(gl, glu, q);
         drawHeadHair(gl, glu, q);
         drawHeadFace(gl, glu, q);
