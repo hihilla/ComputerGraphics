@@ -66,7 +66,65 @@ public class Locomotive implements IRenderable {
      * Wheels
      ▪ Wheel – Cylinder bounded by disks.
      */
-    private void drawWeels(GL2 gl) {
+    private void drawWeels(GL2 gl, GLU glu, GLUquadric q) {
+        gl.glPushMatrix();
+        gl.glColor3f(.2f,.15f,.1f); //brownish color
+        // move to where first back wheel is
+        gl.glTranslated(.2, -.2, .2);
+        glu.gluCylinder(q, .1, .1, .1, 10, 1);
+        // closing disk
+        gl.glTranslated(0, 0, .1);
+        glu.gluDisk(q, 0, .1, 10, 1);
+        // different colored disk
+        gl.glTranslated(0, 0, .001);
+        gl.glColor3f(.3f,.1f,.1f); //brownish color
+        glu.gluDisk(q, 0, .05, 10, 1);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+        gl.glColor3f(.2f,.15f,.1f); //brownish color
+        // move to where second back wheel is
+        gl.glTranslated(.2, -.2, -.2);
+        gl.glRotated(180, 1, 0, 0);
+        glu.gluCylinder(q, .1, .1, .1, 10, 1);
+        // closing disk
+        gl.glTranslated(0, 0, .1);
+        glu.gluDisk(q, 0, .1, 10, 1);
+        // different colored disk
+        gl.glTranslated(0, 0, .001);
+        gl.glColor3f(.3f,.1f,.1f); //brownish color
+        glu.gluDisk(q, 0, .05, 10, 1);
+        gl.glPopMatrix();
+
+
+        gl.glPushMatrix();
+        gl.glColor3f(.2f,.15f,.1f); //brownish color
+        // move to where first front wheel is
+        gl.glTranslated(-.6, -.2, .2);
+        glu.gluCylinder(q, .1, .1, .1, 10, 1);
+        // closing disk
+        gl.glTranslated(0, 0, .1);
+        glu.gluDisk(q, 0, .1, 10, 1);
+        // different colored disk
+        gl.glTranslated(0, 0, .001);
+        gl.glColor3f(.3f,.1f,.1f); //brownish color
+        glu.gluDisk(q, 0, .05, 10, 1);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+        gl.glColor3f(.2f,.15f,.1f); //brownish color
+        // move to where second front wheel is
+        gl.glTranslated(-.6, -.2, -.2);
+        gl.glRotated(180, 1, 0, 0);
+        glu.gluCylinder(q, .1, .1, .1, 10, 1);
+        // closing disk
+        gl.glTranslated(0, 0, .1);
+        glu.gluDisk(q, 0, .1, 10, 1);
+        // different colored disk
+        gl.glTranslated(0, 0, .001);
+        gl.glColor3f(.3f,.1f,.1f); //brownish color
+        glu.gluDisk(q, 0, .05, 10, 1);
+        gl.glPopMatrix();
 
     }
 
@@ -80,24 +138,33 @@ public class Locomotive implements IRenderable {
         // first light
         gl.glColor3f( 0f,0f,0f ); // black
 
+        // move to where first light is
         gl.glTranslated(-.8, -.1, -.1);
         gl.glRotated(90, 0, 1, 0);
+        // draw dark cylinder
         glu.gluCylinder(q, 0.05, 0.05, .05, 10, 1);
+
+        // draw light disk closing the cylinder
         gl.glRotated(180, 1, 0, 0);
-        gl.glColor3f( 1f,1f,1f ); // white
+        gl.glColor3f( 1f,1f,.9f ); // bright color
         glu.gluDisk(q, 0, .05, 10, 1);
         gl.glRotated(-180, 1, 0, 0);
 
         gl.glPopMatrix();
         gl.glPushMatrix();
+
         // second light
         gl.glColor3f( 0f,0f,0f ); // black
 
+        // move to where second light is
         gl.glTranslated(-.8, -.1, .1);
         gl.glRotated(90, 0, 1, 0);
+        // draw dark cylinder
         glu.gluCylinder(q, 0.05, 0.05, .05, 10, 1);
+
+        // draw light disk closing the cylinder
         gl.glRotated(180, 1, 0, 0);
-        gl.glColor3f( 1f,1f,1f ); // white
+        gl.glColor3f( 1f,1f,.9f ); // bright color
         glu.gluDisk(q, 0, .05, 10, 1);
         gl.glRotated(-180, 1, 0, 0);
 
@@ -167,7 +234,7 @@ public class Locomotive implements IRenderable {
 
 
         drawChassis(gl);
-        drawWeels(gl);
+        drawWeels(gl, glu, q);
         drawLights(gl, glu, q);
         drawRoof(gl, glu, q);
         drawChimney(gl, glu, q);
