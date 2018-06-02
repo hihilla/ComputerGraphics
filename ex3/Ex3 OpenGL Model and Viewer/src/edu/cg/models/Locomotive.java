@@ -74,8 +74,34 @@ public class Locomotive implements IRenderable {
      * Lights
      ▪ Front light – Cylinder bounded by disk.
      */
-    private void drawLights(GL2 gl) {
+    private void drawLights(GL2 gl, GLU glu, GLUquadric q) {
+        gl.glPushMatrix();
 
+        // first light
+        gl.glColor3f( 0f,0f,0f ); // black
+
+        gl.glTranslated(-.8, -.1, -.1);
+        gl.glRotated(90, 0, 1, 0);
+        glu.gluCylinder(q, 0.05, 0.05, .05, 10, 1);
+        gl.glRotated(180, 1, 0, 0);
+        gl.glColor3f( 1f,1f,1f ); // white
+        glu.gluDisk(q, 0, .05, 10, 1);
+        gl.glRotated(-180, 1, 0, 0);
+
+        gl.glPopMatrix();
+        gl.glPushMatrix();
+        // second light
+        gl.glColor3f( 0f,0f,0f ); // black
+
+        gl.glTranslated(-.8, -.1, .1);
+        gl.glRotated(90, 0, 1, 0);
+        glu.gluCylinder(q, 0.05, 0.05, .05, 10, 1);
+        gl.glRotated(180, 1, 0, 0);
+        gl.glColor3f( 1f,1f,1f ); // white
+        glu.gluDisk(q, 0, .05, 10, 1);
+        gl.glRotated(-180, 1, 0, 0);
+
+        gl.glPopMatrix();
     }
 
     /**
@@ -142,7 +168,7 @@ public class Locomotive implements IRenderable {
 
         drawChassis(gl);
         drawWeels(gl);
-        drawLights(gl);
+        drawLights(gl, glu, q);
         drawRoof(gl, glu, q);
         drawChimney(gl, glu, q);
 
