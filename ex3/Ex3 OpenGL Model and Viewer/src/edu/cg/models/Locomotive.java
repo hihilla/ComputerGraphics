@@ -227,6 +227,11 @@ public class Locomotive implements IRenderable {
         gl.glColor3f(.2f,.15f,.1f); //brownish color
         // move to where first back wheel is
         gl.glTranslated(.2, -.2, .15);
+        // inside closing disk
+        gl.glRotated(180, 1, 0, 0);
+        glu.gluDisk(q, 0, .1, 10, 1);
+        gl.glRotated(-180, 1, 0, 0);
+        // actual cylinder
         glu.gluCylinder(q, .1, .1, .1, 10, 1);
         // closing disk
         gl.glTranslated(0, 0, .1);
@@ -241,6 +246,9 @@ public class Locomotive implements IRenderable {
         gl.glColor3f(.2f,.15f,.1f); //brownish color
         // move to where second back wheel is
         gl.glTranslated(.2, -.2, -.15);
+        // inside closing disk
+        glu.gluDisk(q, 0, .1, 10, 1);
+        // actual cylinder
         gl.glRotated(180, 1, 0, 0);
         glu.gluCylinder(q, .1, .1, .1, 10, 1);
         // closing disk
@@ -257,6 +265,11 @@ public class Locomotive implements IRenderable {
         gl.glColor3f(.2f,.15f,.1f); //brownish color
         // move to where first front wheel is
         gl.glTranslated(-.6, -.2, .15);
+        // inside closing disk
+        gl.glRotated(180, 1, 0, 0);
+        glu.gluDisk(q, 0, .1, 10, 1);
+        gl.glRotated(-180, 1, 0, 0);
+        // actual cylinder
         glu.gluCylinder(q, .1, .1, .1, 10, 1);
         // closing disk
         gl.glTranslated(0, 0, .1);
@@ -271,7 +284,10 @@ public class Locomotive implements IRenderable {
         gl.glColor3f(.2f,.15f,.1f); //brownish color
         // move to where second front wheel is
         gl.glTranslated(-.6, -.2, -.15);
+        // inside closing disk
+        glu.gluDisk(q, 0, .1, 10, 1);
         gl.glRotated(180, 1, 0, 0);
+        // actual cylinder
         glu.gluCylinder(q, .1, .1, .1, 10, 1);
         // closing disk
         gl.glTranslated(0, 0, .1);
