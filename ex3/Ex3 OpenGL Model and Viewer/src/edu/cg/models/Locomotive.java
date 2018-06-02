@@ -1,11 +1,13 @@
 package edu.cg.models;
 
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES3;
 
 public class Locomotive implements IRenderable {
     private boolean isLightSpheres;
 
     public void render(GL2 gl) {
+        drawLocomotive(gl);
     }
 
 
@@ -45,17 +47,82 @@ public class Locomotive implements IRenderable {
      ▪ Door – Filled polygon.
      ▪ Windows – Filled polygons
      */
-    private void drawChassis() {
-        drawDoor();
-        drawWindows();
+    private void drawChassis(GL2 gl) {
+        drawDoor(gl);
+        drawWindowCloserToDoor(gl);
+        drawWindowFurtherFormDoor(gl);
 
     }
 
-    private void drawDoor() {
+    private void drawDoor(GL2 gl) {
+        gl.glNormal3d(0, 0, 1);
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0, 0); // black door
+        gl.glVertex3f(0.2f, 0.15f, 0); // top right
+        gl.glVertex3f(0.05f, 0.15f, 0); // top left
+        gl.glVertex3f(0.05f, -0.2f, 0); // bottom left
+        gl.glVertex3f(0.2f, -0.2f, 0); // bottom right
 
+        gl.glEnd();
     }
 
-    private void drawWindows() {
+    private void drawWindowCloserToDoor(GL2 gl) {
+        gl.glNormal3d(0, 0, 1);
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0, 0);
+        gl.glVertex3f(-0.05f, 0.15f, 0); // top right
+        gl.glVertex3f(-0.2f, 0.15f, 0); // top left
+        gl.glVertex3f(-0.2f, -0.05f, 0); // bottom left
+        gl.glVertex3f(-0.05f , -0.05f, 0); // bottom right
+        gl.glEnd();
+    }
+
+    private void drawWindowFurtherFormDoor(GL2 gl){
+        gl.glNormal3d(0, 0, 1);
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0, 0);
+        gl.glVertex3f(-0.3f, 0.15f, 0);
+        gl.glVertex3f(-0.45f, 0.15f, 0);
+        gl.glVertex3f(-0.45f, -0.05f, 0);
+        gl.glEnd();
+    }
+
+    private void drawSideWithDoor(GL2 gl){
+        // chassis somehow...
+
+        gl.glNormal3d(0, 0, 1);
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glPushMatrix();
+        // bigger rectangle
+        gl.glColor3f(1, 0, 0);
+        gl.glVertex3f(0.3f, 0.2f, 0.2f);
+        gl.glVertex3f(-0.5f, 0.2f, 0.2f);
+        gl.glVertex3f(-0.5f, -0.2f, 0.2f);
+        gl.glVertex3f(0.3f, -0.2f, 0.2f);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+        // smaller rectangle
+        gl.glColor3f(1, 0 ,0);
+        gl.glVertex3f(0.8f, 0, 0.2f);
+        gl.glVertex3f(0.3f, 0, 0.2f);
+        gl.glVertex3f(0.3f, -0.2f, 0.2f);
+        gl.glVertex3f(0.8f, -0.2f, 0.2f);
+        gl.glPopMatrix();
+        gl.glEnd();
+
+        // door and windows
+        gl.glPushMatrix();
+        gl.glTranslated(0, 0, 0.202f);
+        drawDoor(gl);
+        gl.glPushMatrix();
+        drawWindowCloserToDoor(gl);
+//        gl.glTranslated(0, 0, 0.202f);
+        gl.glPushMatrix();
+        drawWindowFurtherFormDoor(gl);
+
+
+
 
     }
 
@@ -89,11 +156,14 @@ public class Locomotive implements IRenderable {
 
     }
 
-    private void draeLocomotive() {
-        drawChassis();
-        drawWeels();
-        drawLights();
-        drawRoof();
-        drawChimney();
+    private void drawLocomotive(GL2 gl) {
+        //drawChassis();
+        //drawWeels();
+        //drawLights();
+        //drawRoof();
+        //drawChimney();
+        //drawWindows(gl);
+        //drawDoor(gl);
+        drawSideWithDoor(gl);
     }
 }
