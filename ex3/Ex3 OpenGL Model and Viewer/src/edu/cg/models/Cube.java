@@ -6,15 +6,12 @@ public class Cube implements IRenderable {
     private boolean isLightSpheres;
 
     public void render(GL2 gl) {
-        boolean isLightingEnabled = gl.glIsEnabled(GL2.GL_LIGHTING);
-        gl.glDisable(GL2.GL_LIGHTING);
-        cube(gl);
-        if (isLightingEnabled) { gl.glEnable(GL2.GL_LIGHTING); }
+        drawCube(gl);
 
         gl.glFlush();
     }
 
-    private void cube(GL2 gl) {
+    private void drawCube(GL2 gl) {
         float d = 0.5f;
         //giving different colors to different sides
         gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
