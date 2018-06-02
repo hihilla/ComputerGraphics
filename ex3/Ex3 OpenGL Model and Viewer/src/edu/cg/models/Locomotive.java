@@ -125,7 +125,6 @@ public class Locomotive implements IRenderable {
         gl.glColor3f(.3f,.1f,.1f); //brownish color
         glu.gluDisk(q, 0, .05, 10, 1);
         gl.glPopMatrix();
-
     }
 
     /**
