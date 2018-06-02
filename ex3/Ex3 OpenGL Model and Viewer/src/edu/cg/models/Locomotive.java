@@ -167,7 +167,6 @@ public class Locomotive implements IRenderable {
     }
 
     private void drawWindowCloserToDoor(GL2 gl) {
-//        gl.glNormal3d(0, 0, 1);
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor3f(0, 0, 0);
         gl.glVertex3f(-0.05f, 0.15f, 0); // top right
@@ -178,19 +177,19 @@ public class Locomotive implements IRenderable {
     }
 
     private void drawWindowFurtherFormDoor(GL2 gl){
-//        gl.glNormal3d(0, 0, 1);
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor3f(0, 0, 0);
         gl.glVertex3f(-0.3f, 0.15f, 0);
         gl.glVertex3f(-0.45f, 0.15f, 0);
         gl.glVertex3f(-0.45f, -0.05f, 0);
+        gl.glVertex3f(-0.3f, -0.05f, 0);
         gl.glEnd();
     }
 
     private void drawSideWithDoor(GL2 gl){
         // chassis somehow...
 
-//        gl.glNormal3d(0, 0, 1);
+        gl.glFrontFace(2305);
         gl.glBegin(GL2.GL_QUADS);
         // bigger rectangle
         gl.glColor3f(1, 0, 0);
