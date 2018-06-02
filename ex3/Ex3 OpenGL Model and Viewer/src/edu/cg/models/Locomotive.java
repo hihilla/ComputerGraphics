@@ -87,7 +87,7 @@ public class Locomotive implements IRenderable {
 
         // move to where roof starts
         gl.glRotated(90, 0, 1, 0);
-        gl.glTranslated(0, .2, -.1);
+        gl.glTranslated(0, .2, -.3);
         gl.glScaled(1, .25, 1);
 
         // closing disk
