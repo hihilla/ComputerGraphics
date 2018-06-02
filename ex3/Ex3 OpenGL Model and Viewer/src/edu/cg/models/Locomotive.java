@@ -49,28 +49,184 @@ public class Locomotive implements IRenderable {
      ▪ Windows – Filled polygons
      */
     private void drawChassis(GL2 gl) {
-        drawDoor(gl);
-        drawWindows(gl);
+        drawFrontSide(gl);
+        drawBackSide(gl);
+        drawBottom(gl);
+        drawHalfTop(gl);
+        drawHalfFront(gl);
+        drawBottomFront(gl);
+        drawBack(gl);
 
+        gl.glFlush();
     }
+
+    private void drawBack(GL2 gl) {
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(1f,0f,0f); //red color
+
+        gl.glVertex3f(.5f, .2f, .2f);
+        gl.glVertex3f(.5f, -.2f, .2f);
+        gl.glVertex3f(.5f, -.2f, -.2f);
+        gl.glVertex3f(.5f, .2f, -.2f);
+
+        gl.glEnd();
+    }
+
+    private void drawHalfFront(GL2 gl) {
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(1f,0f,0f); //red color
+
+        gl.glVertex3f(-.3f, 0f, .2f);
+        gl.glVertex3f(-.3f, .2f, .2f);
+        gl.glVertex3f(-.3f, .2f, -.2f);
+        gl.glVertex3f(-.3f, 0f, -.2f);
+
+        gl.glEnd();
+    }
+
+    private void drawBottomFront(GL2 gl) {
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(1f,0f,0f); //red color
+
+        gl.glVertex3f(-.8f, -.2f, .2f);
+        gl.glVertex3f(-.8f, 0f, .2f);
+        gl.glVertex3f(-.8f, 0f, -.2f);
+        gl.glVertex3f(-.8f, -.2f, -.2f);
+
+        gl.glEnd();
+    }
+
+    private void drawHalfTop(GL2 gl) {
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(1f,0f,0f); //red color
+
+        gl.glVertex3f(-.3f, 0f, .2f);
+        gl.glVertex3f(-.3f, 0f, -.2f);
+        gl.glVertex3f(-.8f, 0f, -.2f);
+        gl.glVertex3f(-.8f, 0f, .2f);
+
+        gl.glEnd();
+    }
+
+    private void drawBottom(GL2 gl) {
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(1f,0f,0f); //red color
+
+        gl.glVertex3f(.5f, -.2f, .2f);
+        gl.glVertex3f(-.8f, -.2f, .2f);
+        gl.glVertex3f(-.8f, -.2f, -.2f);
+        gl.glVertex3f(.5f, -.2f, -.2f);
+
+        gl.glEnd();
+    }
+
+    private void drawFrontSide(GL2 gl) {
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(1f,0f,0f); //red color
+
+        gl.glVertex3f(.5f, .2f, .2f);
+        gl.glVertex3f(-.3f, .2f, .2f);
+        gl.glVertex3f(-.3f, -.2f, .2f);
+        gl.glVertex3f(.5f, -.2f, .2f);
+        gl.glVertex3f(-.3f, 0, .2f);
+        gl.glVertex3f(-.8f, 0, .2f);
+        gl.glVertex3f(-.8f, -.2f, .2f);
+        gl.glVertex3f(-.3f, -.2f, .2f);
+
+        gl.glEnd();
+    }
+
+    private void drawBackSide(GL2 gl) {
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(1f,0f,0f); //red color
+
+        gl.glVertex3f(.5f, .2f, -.2f);
+        gl.glVertex3f(.5f, -.2f, -.2f);
+        gl.glVertex3f(-.3f, -.2f, -.2f);
+        gl.glVertex3f(-.3f, .2f, -.2f);
+        gl.glVertex3f(-.3f, 0, -.2f);
+        gl.glVertex3f(-.3f, -.2f, -.2f);
+        gl.glVertex3f(-.8f, -.2f, -.2f);
+        gl.glVertex3f(-.8f, 0, -.2f);
+
+        gl.glEnd();
+    }
+
+
+
 
     private void drawDoor(GL2 gl) {
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0, 0); // black door
+        gl.glVertex3f(0.2f, 0.15f, 0); // top right
+        gl.glVertex3f(0.05f, 0.15f, 0); // top left
+        gl.glVertex3f(0.05f, -0.2f, 0); // bottom left
+        gl.glVertex3f(0.2f, -0.2f, 0); // bottom right
 
+        gl.glEnd();
     }
 
-    private void drawWindows(GL2 gl) {
+    private void drawWindowCloserToDoor(GL2 gl) {
+//        gl.glNormal3d(0, 0, 1);
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0, 0);
+        gl.glVertex3f(-0.05f, 0.15f, 0); // top right
+        gl.glVertex3f(-0.2f, 0.15f, 0); // top left
+        gl.glVertex3f(-0.2f, -0.05f, 0); // bottom left
+        gl.glVertex3f(-0.05f , -0.05f, 0); // bottom right
+        gl.glEnd();
+    }
 
+    private void drawWindowFurtherFormDoor(GL2 gl){
+//        gl.glNormal3d(0, 0, 1);
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0, 0);
+        gl.glVertex3f(-0.3f, 0.15f, 0);
+        gl.glVertex3f(-0.45f, 0.15f, 0);
+        gl.glVertex3f(-0.45f, -0.05f, 0);
+        gl.glEnd();
+    }
+
+    private void drawSideWithDoor(GL2 gl){
+        // chassis somehow...
+
+//        gl.glNormal3d(0, 0, 1);
+        gl.glBegin(GL2.GL_QUADS);
+        // bigger rectangle
+        gl.glColor3f(1, 0, 0);
+        gl.glVertex3f(0.3f, 0.2f, 0.2f);
+        gl.glVertex3f(-0.5f, 0.2f, 0.2f);
+        gl.glVertex3f(-0.5f, -0.2f, 0.2f);
+        gl.glVertex3f(0.3f, -0.2f, 0.2f);
+
+        // smaller rectangle
+        gl.glColor3f(1, 0 ,0);
+        gl.glVertex3f(0.8f, 0, 0.2f);
+        gl.glVertex3f(0.3f, 0, 0.2f);
+        gl.glVertex3f(0.3f, -0.2f, 0.2f);
+        gl.glVertex3f(0.8f, -0.2f, 0.2f);
+        gl.glEnd();
+
+        // door and windows
+        gl.glPushMatrix();
+        gl.glTranslated(0, 0, 0.2f);
+        drawDoor(gl);
+        drawWindowCloserToDoor(gl);
+//        gl.glTranslated(0, 0, 0.202f);
+        drawWindowFurtherFormDoor(gl);
+
+        gl.glPopMatrix();
     }
 
     /**
      * Wheels
      ▪ Wheel – Cylinder bounded by disks.
      */
-    private void drawWeels(GL2 gl, GLU glu, GLUquadric q) {
+    private void drawWheels(GL2 gl, GLU glu, GLUquadric q) {
         gl.glPushMatrix();
         gl.glColor3f(.2f,.15f,.1f); //brownish color
         // move to where first back wheel is
-        gl.glTranslated(.2, -.2, .2);
+        gl.glTranslated(.2, -.2, .15);
         glu.gluCylinder(q, .1, .1, .1, 10, 1);
         // closing disk
         gl.glTranslated(0, 0, .1);
@@ -84,7 +240,7 @@ public class Locomotive implements IRenderable {
         gl.glPushMatrix();
         gl.glColor3f(.2f,.15f,.1f); //brownish color
         // move to where second back wheel is
-        gl.glTranslated(.2, -.2, -.2);
+        gl.glTranslated(.2, -.2, -.15);
         gl.glRotated(180, 1, 0, 0);
         glu.gluCylinder(q, .1, .1, .1, 10, 1);
         // closing disk
@@ -100,7 +256,7 @@ public class Locomotive implements IRenderable {
         gl.glPushMatrix();
         gl.glColor3f(.2f,.15f,.1f); //brownish color
         // move to where first front wheel is
-        gl.glTranslated(-.6, -.2, .2);
+        gl.glTranslated(-.6, -.2, .15);
         glu.gluCylinder(q, .1, .1, .1, 10, 1);
         // closing disk
         gl.glTranslated(0, 0, .1);
@@ -114,7 +270,7 @@ public class Locomotive implements IRenderable {
         gl.glPushMatrix();
         gl.glColor3f(.2f,.15f,.1f); //brownish color
         // move to where second front wheel is
-        gl.glTranslated(-.6, -.2, -.2);
+        gl.glTranslated(-.6, -.2, -.15);
         gl.glRotated(180, 1, 0, 0);
         glu.gluCylinder(q, .1, .1, .1, 10, 1);
         // closing disk
@@ -138,7 +294,7 @@ public class Locomotive implements IRenderable {
         gl.glColor3f( 0f,0f,0f ); // black
 
         // move to where first light is
-        gl.glTranslated(-.8, -.1, -.1);
+        gl.glTranslated(-.825, -.1, -.1);
         gl.glRotated(90, 0, 1, 0);
         // draw dark cylinder
         glu.gluCylinder(q, 0.05, 0.05, .05, 10, 1);
@@ -156,7 +312,7 @@ public class Locomotive implements IRenderable {
         gl.glColor3f( 0f,0f,0f ); // black
 
         // move to where second light is
-        gl.glTranslated(-.8, -.1, .1);
+        gl.glTranslated(-.825, -.1, .1);
         gl.glRotated(90, 0, 1, 0);
         // draw dark cylinder
         glu.gluCylinder(q, 0.05, 0.05, .05, 10, 1);
@@ -233,7 +389,7 @@ public class Locomotive implements IRenderable {
 
 
         drawChassis(gl);
-        drawWeels(gl, glu, q);
+        drawWheels(gl, glu, q);
         drawLights(gl, glu, q);
         drawRoof(gl, glu, q);
         drawChimney(gl, glu, q);
