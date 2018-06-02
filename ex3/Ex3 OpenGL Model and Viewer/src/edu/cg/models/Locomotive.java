@@ -56,6 +56,14 @@ public class Locomotive implements IRenderable {
         drawHalfFront(gl);
         drawBottomFront(gl);
         drawBack(gl);
+        drawWindowFrontLeft(gl);
+        drawWindowFrontMid(gl);
+        drawWindowFrontRight(gl);
+        drawShimsha(gl);
+        drawRearShimsha(gl);
+        drawWindowCloserToDoor(gl);
+
+        drawDoor(gl);
 
         gl.glFlush();
     }
@@ -65,6 +73,7 @@ public class Locomotive implements IRenderable {
         gl.glColor3f(1f,0f,0f); //red color
 
         gl.glVertex3f(.5f, .2f, .2f);
+        gl.glVertex3f(.5f, -.2f, .2f);
         gl.glVertex3f(.5f, -.2f, .2f);
         gl.glVertex3f(.5f, -.2f, -.2f);
         gl.glVertex3f(.5f, .2f, -.2f);
@@ -152,16 +161,71 @@ public class Locomotive implements IRenderable {
         gl.glEnd();
     }
 
+    private void drawWindowFrontLeft(GL2 gl){
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0 , 0);
 
+        gl.glVertex3f(-0.05f, 0.15f, 0.21f); // top right
+        gl.glVertex3f(-0.2f, 0.15f, 0.21f); // top left
+        gl.glVertex3f(-0.2f, -0.05f, 0.21f); // bottom left
+        gl.glVertex3f(-0.05f, -0.05f, 0.21f); // bottom right
+        gl.glEnd();
+
+    }
+
+    private void drawWindowFrontMid(GL2 gl){
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0 , 0);
+
+        gl.glVertex3f(0.2f, 0.15f, 0.21f);
+        gl.glVertex3f(0.05f, 0.15f, 0.21f);
+        gl.glVertex3f(0.05f, -0.05f, 0.21f);
+        gl.glVertex3f(0.2f, -0.05f, 0.21f);
+        gl.glEnd();
+    }
+
+    private void drawWindowFrontRight(GL2 gl){
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0 , 0);
+
+        gl.glVertex3f(0.45f, 0.15f, 0.21f);
+        gl.glVertex3f(0.3f, 0.15f, 0.21f);
+        gl.glVertex3f(0.3f, -0.05f, 0.21f);
+        gl.glVertex3f(0.45f, -0.05f, 0.21f);
+        gl.glEnd();
+    }
+
+    private void drawShimsha(GL2 gl){
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0, 0);
+
+        gl.glVertex3f(-0.31f, 0.15f, -0.15f);
+        gl.glVertex3f(-0.31f, 0, -0.15f);
+        gl.glVertex3f(-0.31f, 0, 0.15f);
+        gl.glVertex3f(-0.31f, 0.15f, 0.15f);
+        gl.glEnd();
+    }
+
+    private void drawRearShimsha(GL2 gl){
+        gl.glBegin(GL2.GL_QUADS);
+        gl.glColor3f(0, 0, 0);
+
+        gl.glVertex3f(0.501f, 0.15f, 0.15f);
+        gl.glVertex3f(0.501f, -0.05f, 0.15f);
+        gl.glVertex3f(0.501f, -0.05f, -0.15f);
+        gl.glVertex3f(0.501f, 0.15f, -0.15f);
+        gl.glEnd();
+
+    }
 
 
     private void drawDoor(GL2 gl) {
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor3f(0, 0, 0); // black door
-        gl.glVertex3f(0.2f, 0.15f, 0); // top right
-        gl.glVertex3f(0.05f, 0.15f, 0); // top left
-        gl.glVertex3f(0.05f, -0.2f, 0); // bottom left
-        gl.glVertex3f(0.2f, -0.2f, 0); // bottom right
+        gl.glVertex3f(-0.2f, 0.15f, -0.21f); // top left
+        gl.glVertex3f(-0.05f, 0.15f, -0.21f); // top right
+        gl.glVertex3f(-0.05f, -0.2f, -0.21f); // bottom right
+        gl.glVertex3f(-0.2f, -0.2f, -0.21f); // bottom right
 
         gl.glEnd();
     }
@@ -169,10 +233,10 @@ public class Locomotive implements IRenderable {
     private void drawWindowCloserToDoor(GL2 gl) {
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor3f(0, 0, 0);
-        gl.glVertex3f(-0.05f, 0.15f, 0); // top right
-        gl.glVertex3f(-0.2f, 0.15f, 0); // top left
-        gl.glVertex3f(-0.2f, -0.05f, 0); // bottom left
-        gl.glVertex3f(-0.05f , -0.05f, 0); // bottom right
+        gl.glVertex3f(-0.05f, 0.15f, -0.21f); // top right
+        gl.glVertex3f(-0.15f, 0.15f, -0.21f); // top left
+        gl.glVertex3f(-0.15f, -0.05f, -0.21f); // bottom left
+        gl.glVertex3f(-0.05f , -0.05f, -0.21f); // bottom right
         gl.glEnd();
     }
 
@@ -192,6 +256,7 @@ public class Locomotive implements IRenderable {
         gl.glFrontFace(2305);
         gl.glBegin(GL2.GL_QUADS);
         // bigger rectangle
+        gl.glColor3f(1, 0, 0);
         gl.glColor3f(1, 0, 0);
         gl.glVertex3f(0.3f, 0.2f, 0.2f);
         gl.glVertex3f(-0.5f, 0.2f, 0.2f);
