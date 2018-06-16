@@ -8,7 +8,6 @@ import java.nio.FloatBuffer;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLException;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
@@ -160,8 +159,8 @@ public class Track implements IRenderable {
 	}
 
 	private void drawTrackTriangle(GL2 gl, LocationOnMesila l0, LocationOnMesila l1) {
-		Vec tcn0 = l0.tangentCronnSromal();
-		Vec tcn1 = l1.tangentCronnSromal();
+		Vec tcn0 = l0.tangentCrossNromal();
+		Vec tcn1 = l1.tangentCrossNromal();
 		Point p1 = l0.position.add(tcn0.mult(0.05));
 		Point p2 = l0.position.add(tcn1.mult(0.05));
 		Point p3 = l0.position.add(tcn1.mult(-0.05));
