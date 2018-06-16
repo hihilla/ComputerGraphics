@@ -1,0 +1,16 @@
+package edu.cg;
+
+public class Mesila {
+    Spline spline;
+    double length;
+
+    public Mesila() {
+        spline = null;
+        length = 0;
+    }
+
+    public Mesila(Spline spline) {
+        this.spline = spline;
+        this.length = spline.calcLength();
+    }
+}
