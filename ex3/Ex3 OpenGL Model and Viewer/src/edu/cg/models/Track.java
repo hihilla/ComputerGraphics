@@ -75,9 +75,14 @@ public class Track implements IRenderable {
 
 	private void renderVehicle(GL2 gl) {
 		gl.glPushMatrix();
-		
+
 		//TODO: implement vehicle translations and rotations here...
-		
+		Mesila mesila = mesilot(this.);
+
+		double coeffMatrix = { tangent.x};
+
+
+
 		gl.glScaled(.15, .15, .15);
 		gl.glTranslated(0,.35,0);
 		
