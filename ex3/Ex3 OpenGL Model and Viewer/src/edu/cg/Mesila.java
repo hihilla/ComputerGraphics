@@ -4,6 +4,7 @@ import Jama.Matrix;
 import edu.cg.algebra.Point;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Mesila {
@@ -29,9 +30,20 @@ public class Mesila {
     }
 
 
-//    public static CyclicList<Mesila> getMesilot(CyclicList<Point> points) {
-//
-//    }
+    public static CyclicList<Mesila> getMesilot(CyclicList<Point> points) {
+        CyclicList<PolynomialFunc> xPolynomials = polinomialFuncs(points, 1);
+        CyclicList<PolynomialFunc> yPolynomials = polinomialFuncs(points, 2);
+        CyclicList<PolynomialFunc> zPolynomials = polinomialFuncs(points, 3);
+
+        CyclicList<Mesila> mesilot = new CyclicList<>();
+        for (int i = 0; i < points.size(); i++) {
+            Spline s = new Spline(xPolynomials.get(i), yPolynomials.get(i), zPolynomials.get(i));
+            Mesila m = new Mesila(s);
+            mesilot.add(m);
+        }
+
+        return mesilot;
+    }
 
     // component of point is x (1), y (2), z(3)
     public static CyclicList<PolynomialFunc> polinomialFuncs(CyclicList<Point> points, int component) {
@@ -50,12 +62,22 @@ public class Mesila {
             constraints.addAll(Constraint.getConstraints(p,i,size));
         }
 
-        return new CyclicList<PolynomialFunc>(); // TODO: change
+        double[] polynomialFuncs = solveEquation(constraints);
+        CyclicList<PolynomialFunc> cyclicPolynomials = new CyclicList<PolynomialFunc>();
+        for (int i = 0; i < polynomialFuncs.length;) {
+            PolynomialFunc p = new PolynomialFunc(polynomialFuncs[i++],
+                    polynomialFuncs[i++],
+                    polynomialFuncs[i++],
+                    polynomialFuncs[i++]);
+            cyclicPolynomials.add(p);
+        }
+
+        return cyclicPolynomials;
     }
 
 
     // solving equation A*x=b
-    private static float[] solveEquation(List<Constraint> constraints) {
+    private static double[] solveEquation(List<Constraint> constraints) {
         int size = constraints.size();
         double[][] A = new double[size][0];
         double[] b = new double[size];
@@ -69,8 +91,8 @@ public class Mesila {
         Matrix matrixA = new Matrix(A);
         Matrix vectorB = new Matrix(b, size);
         Matrix sol = matrixA.solve(vectorB);
-        
-        float[] ans = new float[size];
+
+        double[] ans = new double[size];
         for (int j = 0; j < size; ++j) {
             ans[j] = (float) sol.get(j, 0);
         }
