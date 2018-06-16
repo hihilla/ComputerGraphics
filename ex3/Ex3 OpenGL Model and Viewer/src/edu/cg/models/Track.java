@@ -1,22 +1,22 @@
 package edu.cg.models;
 
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.nio.FloatBuffer;
-
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
-
 import edu.cg.CyclicList;
 import edu.cg.LocationOnMesila;
 import edu.cg.Mesila;
 import edu.cg.TrackPoints;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Vec;
+
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.nio.FloatBuffer;
 
 public class Track implements IRenderable {
 	private IRenderable vehicle;
@@ -25,7 +25,7 @@ public class Track implements IRenderable {
 	private Texture texTrack = null;
 
 	private CyclicList<Mesila> mesilot;
-	private int mesila = 0;
+	private int numOfMesila = 0;
 	private double t = 0;
 	private double velocity = 0.01;
 	
@@ -267,7 +267,21 @@ public class Track implements IRenderable {
 		//You should use:
 //		GLU glu = new GLU();
 //		glu.gluLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
-		//TODO: set the camera here to follow the locomotive...
+		//: set the camera here to follow the locomotive...
+		Mesila mesila = mesilot.get(numOfMesila);
+		LocationOnMesila locationOnMesila = mesila.locationOnMesila(t);
+
+		Point eye = locationOnMesila.position;
+		Vec up = locationOnMesila.normal;
+		Vec newNormal = up.mult(0.25);
+		Vec tangent = locationOnMesila.tangent.mult(-0.25);
+		Vec tangentCrossNormal = locationOnMesila.tangentCrossNromal().mult(-0.25);
+
+		Point center = eye.add(tangent);
+		eye = eye.add(tangent.add(newNormal).add(tangentCrossNormal));
+
+		GLU glu = new GLU();
+		glu.gluLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
 	}
 	
 	@Override
