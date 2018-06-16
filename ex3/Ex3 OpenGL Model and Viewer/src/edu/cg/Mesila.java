@@ -53,12 +53,18 @@ public class Mesila {
             Point point = points.get(i);
             double p = 0;
             switch (component) {
-                case 1: p = point.x;
-                case 2: p = point.y;
-                case 3: p = point.z;
+                case 1:
+                    p = point.x;
+                    break;
+                case 2:
+                    p = point.y;
+                    break;
+                case 3:
+                    p = point.z;
+                    break;
             }
 
-            constraints.addAll(Constraint.getConstraints(p,i,size));
+            constraints.addAll(Constraint.getConstraints(p, i, size));
         }
 
         double[] polynomialFuncs = solveEquation(constraints);
@@ -88,9 +94,6 @@ public class Mesila {
         }
 
         Matrix AMat = new Matrix(A);
-        if (AMat.det() == 0) {
-            return b;
-        }
 
         Matrix bMat = new Matrix(b, size);
         Matrix sol = AMat.solve(bMat);

@@ -55,11 +55,11 @@ public class Constraint {
     }
 
     private static Constraint first(double p, int i, int length) {
-        return new Constraint(0, 0, 0, 0, 0, 0, 0, 1, p, i, length);
+        return new Constraint(0, 0, 0, 1, 0, 0, 0, 0, p, i, length);
     }
 
     private static Constraint second(double p, int i, int length) {
-        return new Constraint(0,0,0,1,0,0,0,-1,0,i,length);
+        return new Constraint(1, 1, 1, 1, 0, 0, 0, -1, 0, i, length);
     }
 
     private static Constraint third(double p, int i, int length) {
