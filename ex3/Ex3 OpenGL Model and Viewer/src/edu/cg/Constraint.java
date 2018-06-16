@@ -34,18 +34,19 @@ public class Constraint {
     }
 
     public double[] Ai() {
-        double[] ans = new double[this.length * 4];
+        int sizeAi = this.length * 4;
+        double[] Ai = new double[sizeAi];
         int index = this.i * 4;
-        ans[index++] = this.a1;
-        ans[index++] = this.b1;
-        ans[index++] = this.c1;
-        ans[index++] = this.d1;
-        index %= ans.length;
-        ans[index++] = this.a2;
-        ans[index++] = this.b2;
-        ans[index++] = this.c2;
-        ans[index++] = this.d2;
-        return ans;
+        Ai[index++] = this.a1;
+        Ai[index++] = this.b1;
+        Ai[index++] = this.c1;
+        Ai[index++] = this.d1;
+        index %= sizeAi;
+        Ai[index++] = this.a2;
+        Ai[index++] = this.b2;
+        Ai[index++] = this.c2;
+        Ai[index++] = this.d2;
+        return Ai;
     }
 
     public static List<Constraint> getConstraints(double p, int i, int length) {

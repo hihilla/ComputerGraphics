@@ -66,11 +66,11 @@ public class Mesila {
             b[i] = constraint.b();
         }
 
-        Matrix AMat = new Matrix(A);
-        Matrix bMat = new Matrix(b, size);
-        Matrix sol = AMat.solve(bMat);
+        Matrix matrixA = new Matrix(A);
+        Matrix vectorB = new Matrix(b, size);
+        Matrix sol = matrixA.solve(vectorB);
+        
         float[] ans = new float[size];
-
         for (int j = 0; j < size; ++j) {
             ans[j] = (float) sol.get(j, 0);
         }
