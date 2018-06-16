@@ -1,0 +1,16 @@
+// 
+// Decompiled by Procyon v0.5.30
+// 
+
+package com.jogamp.opengl.util.glsl.fixedfunc;
+
+public enum ShaderSelectionMode
+{
+    AUTO, 
+    COLOR, 
+    COLOR_TEXTURE2, 
+    COLOR_TEXTURE4, 
+    COLOR_TEXTURE8, 
+    COLOR_LIGHT_PER_VERTEX, 
+    COLOR_TEXTURE8_LIGHT_PER_VERTEX;
+}
