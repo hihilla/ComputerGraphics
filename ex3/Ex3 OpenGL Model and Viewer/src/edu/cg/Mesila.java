@@ -53,9 +53,15 @@ public class Mesila {
             Point point = points.get(i);
             double p = 0;
             switch (component) {
-                case 1: p = point.x;
-                case 2: p = point.y;
-                case 3: p = point.z;
+                case 1:
+                    p = point.x;
+                    break;
+                case 2:
+                    p = point.y;
+                    break;
+                case 3:
+                    p = point.z;
+                    break;
             }
             constraints.addAll(Constraint.getConstraints(p,i,size));
         }
