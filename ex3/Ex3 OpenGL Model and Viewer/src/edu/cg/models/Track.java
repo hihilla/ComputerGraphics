@@ -12,8 +12,10 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
 import edu.cg.CyclicList;
+import edu.cg.LocationOnMesila;
 import edu.cg.TrackPoints;
 import edu.cg.algebra.Point;
+import edu.cg.algebra.Vec;
 
 public class Track implements IRenderable {
 	private IRenderable vehicle;
@@ -134,6 +136,18 @@ public class Track implements IRenderable {
 		
 		gl.glDisable(GL2.GL_BLEND);
 		gl.glDisable(GL2.GL_TEXTURE_2D);
+	}
+
+	private void drawTrackTriangle(GL2 gl, LocationOnMesila l0, LocationOnMesila l1) {
+		Vec tcn0 = l0.tangentCronnSromal();
+		Vec tcn1 = l1.tangentCronnSromal();
+		Point p1 = l0.position.add(tcn0.mult(0.05));
+		Point p2 = l0.position.add(tcn1.mult(0.05));
+		Point p3 = l0.position.add(tcn1.mult(-0.05));
+		Point p4 = l0.position.add(tcn0.mult(-0.05));
+
+		gl.glTexCoord2d(0, 0);
+//		gl.glVertex3fv(p1.toGLVertex());
 	}
 
 	@SuppressWarnings("unchecked")
