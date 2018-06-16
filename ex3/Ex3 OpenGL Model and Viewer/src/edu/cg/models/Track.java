@@ -240,7 +240,8 @@ public class Track implements IRenderable {
 			try {
 				Method m = TrackPoints.class.getMethod("track" + params);
 				trackPoints = (CyclicList<Point>)m.invoke(null);
-				//TODO: replace the track with the new one...
+				//: replace the track with the new one...
+				mesilot = Mesila.getMesilot(trackPoints);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
