@@ -4,6 +4,10 @@ public class Mesila {
     Spline spline;
     double length;
 
+    public double getLength() {
+        return length;
+    }
+
     public Mesila() {
         spline = null;
         length = 0;

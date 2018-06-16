@@ -1,5 +1,7 @@
 package edu.cg.algebra;
 
+import java.nio.FloatBuffer;
+
 public class Point {
 	public float x, y, z;
 	
@@ -67,6 +69,11 @@ public class Point {
 	
 	public boolean isFinite() {
 		return Ops.isFinite(this);
+	}
+
+	public FloatBuffer floatBuffer() {
+		float[] arr = {x, y, z};
+		return FloatBuffer.wrap(arr);
 	}
 	
 	@Override
