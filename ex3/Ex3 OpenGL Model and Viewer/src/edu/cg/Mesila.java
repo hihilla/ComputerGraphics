@@ -62,7 +62,7 @@ public class Mesila {
         }
 
         double[] polynomialFuncs = solveEquation(constraints);
-        CyclicList<PolynomialFunc> cyclicPolynomials = new CyclicList<PolynomialFunc>();
+        CyclicList<PolynomialFunc> cyclicPolynomials = new CyclicList<>();
         for (int i = 0; i < polynomialFuncs.length;) {
             PolynomialFunc p = new PolynomialFunc(polynomialFuncs[i++],
                     polynomialFuncs[i++],
@@ -78,22 +78,26 @@ public class Mesila {
     // solving equation A*x=b
     private static double[] solveEquation(List<Constraint> constraints) {
         int size = constraints.size();
-        double[][] A = new double[size][0];
+        double[][] A = new double[size][];
         double[] b = new double[size];
 
-        for (int i = 0; i < size; ++i) {
+        for (int i = 0; i < size; i++) {
             Constraint constraint = constraints.get(i);
             A[i] = constraint.Ai();
             b[i] = constraint.b();
         }
 
-        Matrix matrixA = new Matrix(A);
-        Matrix vectorB = new Matrix(b, size);
-        Matrix sol = matrixA.solve(vectorB);
+        Matrix AMat = new Matrix(A);
+        if (AMat.det() == 0) {
+            return b;
+        }
 
+        Matrix bMat = new Matrix(b, size);
+        Matrix sol = AMat.solve(bMat);
         double[] ans = new double[size];
-        for (int j = 0; j < size; ++j) {
-            ans[j] = (float) sol.get(j, 0);
+
+        for (int j = 0; j < size; j++) {
+            ans[j] = sol.get(j, 0);
         }
 
         return ans;
