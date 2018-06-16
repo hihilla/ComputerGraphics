@@ -78,17 +78,36 @@ public class Track implements IRenderable {
 		gl.glPushMatrix();
 
 		//TODO: implement vehicle translations and rotations here...
-		Mesila mesila = mesilot(this.);
+		Mesila mesila = mesilot.get(this.mesila);
+		LocationOnMesila location = mesila.locationOnMesila(this.t);
+		Point p = location.position;
+		Vec tangent = location.tangent.neg();
+		Vec normalToTangent = location.normal;
+		Vec tangCrossNormal = location.tangentCrossNromal().neg();
+		gl.glTranslated(p.x, p.y, p.z);
 
-		double coeffMatrix = { tangent.x};
+		double[] coeffMatrix = {tangent.x, tangent.y, tangent.z, 0,
+								normalToTangent.x, normalToTangent.y, normalToTangent.z, 0,
+								tangCrossNormal.x, tangCrossNormal.y, tangCrossNormal.z, 0,
+								0, 0, 0, 1};
 
+		gl.glMultMatrixd(coeffMatrix, 0);
+		gl.glScaled(0.15, 0.15, 0.15);
+		gl.glTranslated(0, 0.35, 0);
 
-
-		gl.glScaled(.15, .15, .15);
-		gl.glTranslated(0,.35,0);
-		
-		vehicle.render(gl);
+		this.vehicle.render(gl);
 		gl.glPopMatrix();
+
+		double length = mesila.getLength();
+		double dt = this.velocity / length;
+		this.t += dt;
+		if (this.t > 1) {
+			this.t = this.t-1;
+			mesilot.get(this.mesila) = this.get(this.mesila + 1) % this.mesilot.size();
+		}
+		else if (this.t < 0) {
+			this.t++;
+			mesilot.get(this.mesila) = this.get(this.mesila - 1) % this.mesilot.size();
 	}
 
 	private void renderField(GL2 gl) {
