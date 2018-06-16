@@ -30,9 +30,9 @@ public class Mesila {
 
 
     public static CyclicList<Mesila> getMesilot(CyclicList<Point> points) {
-        CyclicList<PolynomialFunc> xPolynomials = polinomialFuncs(points, 1);
-        CyclicList<PolynomialFunc> yPolynomials = polinomialFuncs(points, 2);
-        CyclicList<PolynomialFunc> zPolynomials = polinomialFuncs(points, 3);
+        CyclicList<PolynomialFunc> xPolynomials = polynomialFuncs(points, 1);
+        CyclicList<PolynomialFunc> yPolynomials = polynomialFuncs(points, 2);
+        CyclicList<PolynomialFunc> zPolynomials = polynomialFuncs(points, 3);
 
         CyclicList<Mesila> mesilot = new CyclicList<>();
         for (int i = 0; i < points.size(); i++) {
@@ -45,7 +45,7 @@ public class Mesila {
     }
 
     // component of point is x (1), y (2), z(3)
-    public static CyclicList<PolynomialFunc> polinomialFuncs(CyclicList<Point> points, int component) {
+    public static CyclicList<PolynomialFunc> polynomialFuncs(CyclicList<Point> points, int component) {
         int size = points.size();
         List<Constraint> constraints = new ArrayList<>(4 * size);
 
@@ -53,22 +53,15 @@ public class Mesila {
             Point point = points.get(i);
             double p = 0;
             switch (component) {
-                case 1:
-                    p = point.x;
-                    break;
-                case 2:
-                    p = point.y;
-                    break;
-                case 3:
-                    p = point.z;
-                    break;
+                case 1: p = point.x;
+                case 2: p = point.y;
+                case 3: p = point.z;
             }
-
-            constraints.addAll(Constraint.getConstraints(p, i, size));
+            constraints.addAll(Constraint.getConstraints(p,i,size));
         }
 
         double[] polynomialFuncs = solveEquation(constraints);
-        CyclicList<PolynomialFunc> cyclicPolynomials = new CyclicList<>();
+        CyclicList<PolynomialFunc> cyclicPolynomials = new CyclicList<PolynomialFunc>();
         for (int i = 0; i < polynomialFuncs.length;) {
             PolynomialFunc p = new PolynomialFunc(polynomialFuncs[i++],
                     polynomialFuncs[i++],
@@ -84,23 +77,22 @@ public class Mesila {
     // solving equation A*x=b
     private static double[] solveEquation(List<Constraint> constraints) {
         int size = constraints.size();
-        double[][] A = new double[size][];
+        double[][] A = new double[size][0];
         double[] b = new double[size];
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; ++i) {
             Constraint constraint = constraints.get(i);
             A[i] = constraint.Ai();
             b[i] = constraint.b();
         }
 
-        Matrix AMat = new Matrix(A);
+        Matrix matrixA = new Matrix(A);
+        Matrix vectorB = new Matrix(b, size);
+        Matrix sol = matrixA.solve(vectorB);
 
-        Matrix bMat = new Matrix(b, size);
-        Matrix sol = AMat.solve(bMat);
         double[] ans = new double[size];
-
-        for (int j = 0; j < size; j++) {
-            ans[j] = sol.get(j, 0);
+        for (int j = 0; j < size; ++j) {
+            ans[j] = (float) sol.get(j, 0);
         }
 
         return ans;
