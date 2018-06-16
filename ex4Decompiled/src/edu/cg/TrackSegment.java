@@ -46,10 +46,12 @@ public class TrackSegment
     private static CyclicList<Poly> calcPolys(final CyclicList<Point> points, final Selector sel) {
         final int size = points.size();
         final List<Constraint> constraints = new ArrayList<Constraint>(size * 4);
+
         for (int i = 0; i < size; ++i) {
             final float p = sel.select(points.get(i));
             constraints.addAll(Constraint.calcConstraints(p, i, size));
         }
+
         final float[] polys = solve(constraints);
         final CyclicList<Poly> ans = new CyclicList<Poly>();
         int j = 0;
@@ -265,13 +267,14 @@ public class TrackSegment
         }
         
         public double[] Ai() {
-            final double[] ans = new double[this.length * 4];
+            int matrixSize = this.length * 4;
+            final double[] ans = new double[matrixSize];
             int index = this.i * 4;
             ans[index++] = this.a1;
             ans[index++] = this.b1;
             ans[index++] = this.c1;
             ans[index++] = this.d1;
-            index %= ans.length;
+            index %= matrixSize;
             ans[index++] = this.a2;
             ans[index++] = this.b2;
             ans[index++] = this.c2;

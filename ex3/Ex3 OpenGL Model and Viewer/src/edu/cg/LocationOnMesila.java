@@ -13,7 +13,7 @@ public class LocationOnMesila {
         this.normal = normal;
     }
 
-    public Vec tangentCronnSromal() {
+    public Vec tangentCrossNromal() {
         return tangent.cross(normal);
     }
 }
