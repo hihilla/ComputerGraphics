@@ -40,16 +40,17 @@ public class Track implements IRenderable {
 	}
 	
 	public Track() {
-		//TODO: uncomment this and change it if for your needs.
-//		this(new Locomotive());
+		//: uncomment this and change it if for your needs.
+		this(new Locomotive());
 	}
 
 	@Override
 	public void init(GL2 gl) {
-		//TODO: Build your track splines here.
+		//: Build your track splines here.
 		//Compute the length of each spline.
 		//Do not repeat those calculations over and over in the render method.
-		//It will make the application to run not smooth.  
+		//It will make the application to run not smooth.
+		mesilot = Mesila.getMesilot(trackPoints);
 		loadTextures(gl);
 		vehicle.init(gl);
 	}
