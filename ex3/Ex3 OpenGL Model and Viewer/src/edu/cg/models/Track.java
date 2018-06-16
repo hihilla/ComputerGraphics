@@ -78,9 +78,9 @@ public class Track implements IRenderable {
 	private void renderVehicle(GL2 gl) {
 		gl.glPushMatrix();
 
-		//TODO: implement vehicle translations and rotations here...
-		Mesila mesila = mesilot.get(this.mesila);
-		LocationOnMesila location = mesila.locationOnMesila(this.t);
+		//: implement vehicle translations and rotations here...
+		Mesila mesila = mesilot.get(numOfMesila);
+		LocationOnMesila location = mesila.locationOnMesila(t);
 		Point p = location.position;
 		Vec tangent = location.tangent.neg();
 		Vec normalToTangent = location.normal;
@@ -88,27 +88,28 @@ public class Track implements IRenderable {
 		gl.glTranslated(p.x, p.y, p.z);
 
 		double[] coeffMatrix = {tangent.x, tangent.y, tangent.z, 0,
-								normalToTangent.x, normalToTangent.y, normalToTangent.z, 0,
-								tangCrossNormal.x, tangCrossNormal.y, tangCrossNormal.z, 0,
-								0, 0, 0, 1};
+				normalToTangent.x, normalToTangent.y, normalToTangent.z, 0,
+				tangCrossNormal.x, tangCrossNormal.y, tangCrossNormal.z, 0,
+				0, 0, 0, 1};
 
 		gl.glMultMatrixd(coeffMatrix, 0);
-		gl.glScaled(0.15, 0.15, 0.15);
-		gl.glTranslated(0, 0.35, 0);
+
+		gl.glScaled(.15, .15, .15);
+		gl.glTranslated(0, .35, 0);
 
 		this.vehicle.render(gl);
 		gl.glPopMatrix();
 
 		double length = mesila.getLength();
-		double dt = this.velocity / length;
-		this.t += dt;
-		if (this.t > 1) {
-			this.t = this.t-1;
-			mesilot.get(this.mesila) = this.get(this.mesila + 1) % this.mesilot.size();
+		double dt = velocity / length;
+		t += dt;
+		if (t > 1) {
+			t--;
+			numOfMesila = (numOfMesila + 1) % mesilot.size();
+		} else if (t < 0) {
+			t++;
+			numOfMesila = (numOfMesila - 1) % mesilot.size();
 		}
-		else if (this.t < 0) {
-			this.t++;
-			mesilot.get(this.mesila) = this.get(this.mesila - 1) % this.mesilot.size();
 	}
 
 	private void renderField(GL2 gl) {
