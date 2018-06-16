@@ -30,9 +30,9 @@ public class Mesila {
 
 
     public static CyclicList<Mesila> getMesilot(CyclicList<Point> points) {
-        CyclicList<PolynomialFunc> xPolynomials = polinomialFuncs(points, 1);
-        CyclicList<PolynomialFunc> yPolynomials = polinomialFuncs(points, 2);
-        CyclicList<PolynomialFunc> zPolynomials = polinomialFuncs(points, 3);
+        CyclicList<PolynomialFunc> xPolynomials = polynomialFuncs(points, 1);
+        CyclicList<PolynomialFunc> yPolynomials = polynomialFuncs(points, 2);
+        CyclicList<PolynomialFunc> zPolynomials = polynomialFuncs(points, 3);
 
         CyclicList<Mesila> mesilot = new CyclicList<>();
         for (int i = 0; i < points.size(); i++) {
@@ -45,7 +45,7 @@ public class Mesila {
     }
 
     // component of point is x (1), y (2), z(3)
-    public static CyclicList<PolynomialFunc> polinomialFuncs(CyclicList<Point> points, int component) {
+    public static CyclicList<PolynomialFunc> polynomialFuncs(CyclicList<Point> points, int component) {
         int size = points.size();
         List<Constraint> constraints = new ArrayList<>(4 * size);
 
@@ -57,7 +57,6 @@ public class Mesila {
                 case 2: p = point.y;
                 case 3: p = point.z;
             }
-
             constraints.addAll(Constraint.getConstraints(p,i,size));
         }
 
