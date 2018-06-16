@@ -25,7 +25,9 @@ public class Track implements IRenderable {
 	private Texture texTrack = null;
 
 	private CyclicList<Mesila> mesilot;
+	private int mesila = 0;
 	private double t = 0;
+	private double velocity = 0.01;
 	
 	public Track(IRenderable vehicle, CyclicList<Point> trackPoints) {
 		this.vehicle = vehicle;
@@ -225,11 +227,13 @@ public class Track implements IRenderable {
 	public void control(int type, Object params) {
 		switch(type) {
 		case KeyEvent.VK_UP:
-			//TODO: increase the locomotive velocity
+			//: increase the locomotive velocity
+			velocity += 0.01;
 			break;
 			
 		case KeyEvent.VK_DOWN:
-			//TODO: decrease the locomotive velocity
+			//: decrease the locomotive velocity
+			velocity -= 0.01;
 			break;
 			
 		case KeyEvent.VK_ENTER:
