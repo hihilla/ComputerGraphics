@@ -3,7 +3,9 @@ package edu.cg;
 import java.awt.Component;
 import java.awt.Point;
 
-import com.jogamp.opengl.*;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import edu.cg.algebra.Vec;
@@ -11,29 +13,28 @@ import edu.cg.models.IRenderable;
 
 /**
  * An OpenGL model viewer
+ *
  */
 public class Viewer implements GLEventListener {
 
-    private double zoom = 0.0; //How much to zoom in? >0 mean magnify, <0 means shrink
+    private double zoom; //How much to zoom in? >0 mean come closer, <0 means get back
     private Point mouseFrom, mouseTo; //From where to where was the mouse dragged between the last redraws?
+    private int canvasWidth, canvasHeight;
     private boolean isWireframe = false; //Should we display wireframe or not?
     private boolean isAxes = true; //Should we display axes or not?
-    private IRenderable model; //Model to display
+    private IRenderable model = null; //Model to display
     private FPSAnimator ani; //This object is responsible to redraw the model with a constant FPS
-    private Component glPanel; //We store the OpenGL panel component object to refresh the scene
-    private boolean isModelCamera = false; //Whether the camera is relative to the model, rather than the world (ex6)
+    private double rotationMatrix[] = {1,0,0,0,
+            0,1,0,0,
+            0,0,1,0,
+            0,0,0,1};
+    private Component glPanel;
+    private boolean isModelCamera = false;
     private boolean isModelInitialized = false; //Whether model.init() was called.
-    private double[] rotationMatrix = new double[]{1.0, 0.0, 0.0, 0.0,
-            0.0, 1.0, 0.0, 0.0,
-            0.0, 0.0, 1.0, 0.0,
-            0.0, 0.0, 0.0, 1.0};
-
-    // Remember the width and height of the canvas for the trackball.
-    private int canWidth = 0;
-    private int canHeight = 0;
 
     public Viewer(Component glPanel) {
         this.glPanel = glPanel;
+        zoom = 0;
     }
 
     @Override
@@ -43,23 +44,20 @@ public class Viewer implements GLEventListener {
             initModel(gl);
             isModelInitialized = true;
         }
-        //TODO: uncomment the following line to clear the window before drawing
+
+        //clear the window before drawing
+        gl.glClearColor(0, 0, 0, 1);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        gl.glClearColor(1.0F, 1.0F, 1.0F, 1.0F);
-        gl.glClear(GL.GL_CLEAR);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
+
         setupCamera(gl);
         if (isAxes)
             renderAxes(gl);
 
-        // set wireframe mode
-        if (isWireframe) {
-            // display wireframe
+        if (isWireframe)
             gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
-        } else {
-            // don't display wireframe
+        else
             gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
-        }
 
         model.render(gl);
 
@@ -67,51 +65,43 @@ public class Viewer implements GLEventListener {
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
     }
 
-    private Vec projectPoint(Point p) {
-        double x = (2.0 * p.x / canWidth) - 1;
-        double y = 1 - (2.0 * p.y / canHeight);
-        double z = 2 - Math.pow(x, 2) - Math.pow(y, 2);
-        if (z < 0) {
-            z = 0;
-        }
-        z = Math.sqrt(z);
-        Vec vecOfMouse = new Vec(x, y, z).normalize();
-        return vecOfMouse;
+    private Vec mousePointToVec(Point pt) {
+        double x = 2*pt.x/(double)canvasWidth-1;
+        double y = 1-2*pt.y/(double)canvasHeight;
+        double z2 = 2-x*x-y*y;
+        if (z2 < 0)
+            z2 = 0;
+        double z = Math.sqrt(z2);
+        return new Vec(x,y,z).normalize();
     }
 
-
     private void setupCamera(GL2 gl) {
-        if (!isModelCamera) { //Camera is in an absolute location
-            // place the camera. You should use mouseFrom, mouseTo, canvas width and
-            //      height (reshape function), zoom etc. This should actually implement the trackball
-            //		and zoom. You might want to store the rotation matrix in an array for next time.
-            //		Relevant functions: glGetDoublev, glMultMatrixd
-            //      Example: gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
+        if (!isModelCamera) {
+            //Calculate rotation matrix
             gl.glLoadIdentity();
-            if (this.mouseFrom != null && this.mouseTo != null) {
-                Vec projectPointFrom = projectPoint(this.mouseFrom);
-                Vec projectPointTo = projectPoint(this.mouseTo);
-                Vec axis = projectPointFrom.cross(projectPointTo).normalize();
+            if (mouseFrom != null && mouseTo != null) {
+                Vec from = mousePointToVec(mouseFrom);
+                Vec to = mousePointToVec(mouseTo);
+                Vec axis = from.cross(to).normalize();
                 if (axis.isFinite()) {
-                    double angle = Math.toDegrees(1.0) *
-                            Math.acos((double) projectPointFrom.dot(projectPointTo));
-                    angle = Double.isFinite(angle) ? angle : 0.0;
-                    gl.glRotated(angle, (double) axis.x, (double) axis.y, (double) axis.z);
+                    axis.normalize();
+                    double angle = 180/Math.PI*Math.acos(from.dot(to));
+                    gl.glRotated(angle, axis.x, axis.y, axis.z);
                 }
             }
-
             gl.glMultMatrixd(rotationMatrix, 0);
             gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
+
             gl.glLoadIdentity();
-            gl.glTranslated(0.0, 0.0, -1.2);
-            gl.glTranslated(0.0, 0.0, -this.zoom);
+            gl.glTranslated(0, 0, -1.2);
+            gl.glTranslated(0,0,-zoom);
             gl.glMultMatrixd(rotationMatrix, 0);
 
-            //By this point, we should have already changed the point of view, now set these to null
+            //We should have already changed the point of view, now set these to null
             //so we don't change it again on the next redraw.
             mouseFrom = null;
             mouseTo = null;
-        } else { //Camera is relative to the model
+        } else {
             gl.glLoadIdentity();
             model.setCamera(gl);
         }
@@ -119,6 +109,7 @@ public class Viewer implements GLEventListener {
 
     @Override
     public void dispose(GLAutoDrawable drawable) {
+        // TODO Unload textures if any were loaded using glDeleteTextures()
     }
 
     @Override
@@ -126,28 +117,26 @@ public class Viewer implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
 
         // Initialize display callback timer
-        //TODO Uncomment the following lines to create an animator object and attach it to the canvas.
         ani = new FPSAnimator(30, true);
         ani.add(drawable);
-
         glPanel.repaint();
 
         initModel(gl);
     }
 
     public void initModel(GL2 gl) {
-        // light model, normal normalization, depth test, back face culling, ...
-        gl.glLightModelf(GL2.GL_LIGHT_MODEL_TWO_SIDE, 1.0f); // light model
-        gl.glEnable(GL2.GL_NORMALIZE); // normalize
-        gl.glEnable(GL2.GL_DEPTH_TEST); // depth test
-
-
         gl.glCullFace(GL2.GL_BACK);    // Set Culling Face To Back Face
         gl.glEnable(GL2.GL_CULL_FACE); // Enable back face culling
 
+        gl.glEnable(GL2.GL_NORMALIZE);
+        gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glLightModelf(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
+        gl.glEnable(GL2.GL_LIGHTING);
+
         model.init(gl);
 
-        if (model.isAnimated()) //Start animation (for ex6)
+
+        if (model.isAnimated())
             startAnimation();
         else
             stopAnimation();
@@ -155,28 +144,29 @@ public class Viewer implements GLEventListener {
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        // Remember the width and height of the canvas for the trackball.
-        canWidth = width;
-        canHeight = height;
-
         GL2 gl = drawable.getGL().getGL2();
 
-        // prevent divide by zero
-        if (width == 0) width = 1;
-        float aspect = (float) height / width;
+        canvasWidth = width;
+        canvasHeight = height;
 
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        gl.glFrustum(-.1, .1, -.1 * aspect, .1 * aspect, .1, 1000);
+        gl.glFrustum(-.1,.1,-.1*height/width,.1*height/width,0.1,1000);
     }
 
     /**
-     * Stores the mouse coordinates for trackball rotation.
+     * Rotate model in a way that corresponds with a virtual trackball.
+     * This function is called whenever the mouse is dragged inside the window.
+     * The window is refreshed 30 times/sec, and if there are more than 1 mouse
+     * drag event between 2 refreshes, we just need to store the first and last
+     * points.
      *
-     * @param from 2D canvas point of drag beginning
-     * @param to   2D canvas point of drag ending
+     * @param from
+     *            2D canvas point of drag beginning
+     * @param to
+     *            2D canvas point of drag ending
      */
-    public void storeTrackball(Point from, Point to) {
+    public void trackball(Point from, Point to) {
         //The following lines store the rotation for use when next displaying the model.
         //After you redraw the model, you should set these variables back to null.
         if (!isModelCamera) {
@@ -190,11 +180,12 @@ public class Viewer implements GLEventListener {
     /**
      * Zoom in or out of object. s<0 - zoom out. s>0 zoom in.
      *
-     * @param s Scalar
+     * @param s
+     *            Scalar
      */
     public void zoom(double s) {
         if (!isModelCamera) {
-            zoom += s * 0.1;
+            zoom += s*0.1;
             glPanel.repaint();
         }
     }
@@ -208,7 +199,7 @@ public class Viewer implements GLEventListener {
     }
 
     /**
-     * Toggle whether little spheres are shown at the location of the light sources (ex6).
+     * Toggle whether little spheres are shown at the location of the light sources.
      */
     public void toggleLightSpheres() {
         model.control(IRenderable.TOGGLE_LIGHT_SPHERES, null);
@@ -224,27 +215,26 @@ public class Viewer implements GLEventListener {
     }
 
     public void toggleModelCamera() {
-        isModelCamera = !isModelCamera;
+        isModelCamera =! isModelCamera;
         glPanel.repaint();
     }
 
     /**
-     * Start redrawing the scene with 30 FPS
+     * Start redrawing the scene with 60 FPS
      */
     public void startAnimation() {
-        //TODO Uncomment these lines to animate the model
         if (!ani.isAnimating())
             ani.start();
     }
 
     /**
-     * Stop redrawing the scene with 30 FPS
+     * Stop redrawing the scene with 60 FPS
      */
     public void stopAnimation() {
-        //TODO Uncomment these lines to stop animating the model
         if (ani.isAnimating())
             ani.stop();
     }
+
 
     private void renderAxes(GL2 gl) {
         gl.glLineWidth(2);
@@ -253,23 +243,32 @@ public class Viewer implements GLEventListener {
         gl.glBegin(GL2.GL_LINES);
         gl.glColor3d(1, 0, 0);
         gl.glVertex3d(0, 0, 0);
-        gl.glVertex3d(10, 0, 0);
+        gl.glVertex3d(1, 0, 0);
 
         gl.glColor3d(0, 1, 0);
         gl.glVertex3d(0, 0, 0);
-        gl.glVertex3d(0, 10, 0);
+        gl.glVertex3d(0, 1, 0);
 
         gl.glColor3d(0, 0, 1);
         gl.glVertex3d(0, 0, 0);
-        gl.glVertex3d(0, 0, 10);
+        gl.glVertex3d(0, 0, 1);
 
         gl.glEnd();
-        if (flag)
+        if(flag)
             gl.glEnable(GL2.GL_LIGHTING);
     }
 
     public void setModel(IRenderable model) {
+        if(this.model != null) {
+            GL2 gl = ((GLAutoDrawable) glPanel).getGL().getGL2();
+            this.model.destroy(gl);
+        }
         this.model = model;
         isModelInitialized = false;
     }
+
+    public IRenderable getModel() {
+        return model;
+    }
+
 }
