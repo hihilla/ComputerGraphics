@@ -78,7 +78,7 @@ public class Point
         return this.sub(new Point());
     }
     
-    public FloatBuffer toGLVertex() {
+    public FloatBuffer floatBuffer() {
         return FloatBuffer.wrap(this.toArray());
     }
     

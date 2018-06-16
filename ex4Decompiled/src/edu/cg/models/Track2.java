@@ -4,10 +4,9 @@
 
 package edu.cg.models;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.glu.GLU;
 import java.lang.reflect.Method;
-import java.util.Iterator;
+
 import edu.cg.algebra.Vec;
 import java.io.IOException;
 import com.jogamp.opengl.GLException;
@@ -152,17 +151,20 @@ public class Track2 implements IRenderable
         gl.glTexParameteri(3553, 10241, 9987);
         gl.glTexParameteri(3553, 33083, 2);
         gl.glBegin(4);
+
         for (final TrackSegment segment : this.segments) {
             final double length = segment.length();
             final int numOfSubSegments = (int)(length / 0.05) + 1;
             final double dt = 1.0 / numOfSubSegments;
             double t = 0.0;
+
             for (int i = 0; i < numOfSubSegments; ++i, t += dt) {
                 final TrackSegment.LocationOnSegment l0 = segment.getLocationOnSegment(t);
                 final TrackSegment.LocationOnSegment l2 = segment.getLocationOnSegment(t + dt);
                 this.renderTrackPiece(gl, l0, l2);
             }
         }
+
         gl.glEnd();
         if (lightningEnabled) {
             gl.glEnable(2896);
@@ -174,45 +176,45 @@ public class Track2 implements IRenderable
     private void renderTrackPiece(final GL2 gl, final TrackSegment.LocationOnSegment l0, final TrackSegment.LocationOnSegment l1) {
         final Vec r0 = l0.right();
         final Vec r2 = l1.right();
-        final Point p0 = l0.pos.add(r0.mult(0.05f));
+        final Point p1 = l0.pos.add(r0.mult(0.05f));
         final Point p2 = l1.pos.add(r2.mult(0.05f));
         final Point p3 = l1.pos.add(r2.mult(-0.05f));
         final Point p4 = l0.pos.add(r0.mult(-0.05f));
         gl.glTexCoord2d(0.0, 0.0);
-        gl.glVertex3fv(p0.toGLVertex());
+        gl.glVertex3fv(p1.floatBuffer());
 
         gl.glTexCoord2d(0.0, 1.0);
-        gl.glVertex3fv(p2.toGLVertex());
+        gl.glVertex3fv(p2.floatBuffer());
 
         gl.glTexCoord2d(1.0, 1.0);
-        gl.glVertex3fv(p3.toGLVertex());
+        gl.glVertex3fv(p3.floatBuffer());
 
         gl.glTexCoord2d(0.0, 0.0);
-        gl.glVertex3fv(p0.toGLVertex());
+        gl.glVertex3fv(p1.floatBuffer());
 
         gl.glTexCoord2d(1.0, 1.0);
-        gl.glVertex3fv(p3.toGLVertex());
+        gl.glVertex3fv(p3.floatBuffer());
 
         gl.glTexCoord2d(0.0, 1.0);
-        gl.glVertex3fv(p2.toGLVertex());
+        gl.glVertex3fv(p2.floatBuffer());
 
         gl.glTexCoord2d(0.0, 0.0);
-        gl.glVertex3fv(p0.toGLVertex());
+        gl.glVertex3fv(p1.floatBuffer());
 
         gl.glTexCoord2d(1.0, 1.0);
-        gl.glVertex3fv(p3.toGLVertex());
+        gl.glVertex3fv(p3.floatBuffer());
 
         gl.glTexCoord2d(1.0, 0.0);
-        gl.glVertex3fv(p4.toGLVertex());
+        gl.glVertex3fv(p4.floatBuffer());
 
         gl.glTexCoord2d(0.0, 0.0);
-        gl.glVertex3fv(p0.toGLVertex());
+        gl.glVertex3fv(p1.floatBuffer());
 
         gl.glTexCoord2d(1.0, 0.0);
-        gl.glVertex3fv(p4.toGLVertex());
+        gl.glVertex3fv(p4.floatBuffer());
 
         gl.glTexCoord2d(1.0, 1.0);
-        gl.glVertex3fv(p3.toGLVertex());
+        gl.glVertex3fv(p3.floatBuffer());
     }
     
     @Override
