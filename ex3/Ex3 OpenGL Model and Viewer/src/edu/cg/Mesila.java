@@ -4,7 +4,6 @@ import Jama.Matrix;
 import edu.cg.algebra.Point;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Mesila {
