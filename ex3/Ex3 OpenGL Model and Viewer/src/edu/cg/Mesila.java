@@ -63,7 +63,7 @@ public class Mesila {
                     p = point.z;
                     break;
             }
-            constraints.addAll(Constraint.getConstraints(p,i,size));
+            constraints.addAll(Constraint.getConstraints(p, i, size));
         }
 
         double[] polynomialFuncs = solveEquation(constraints);

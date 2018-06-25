@@ -3,7 +3,7 @@ package edu.cg;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Vec;
 
-public  class Spline {
+public class Spline {
     PolynomialFunc[] polyFuncs;
 
     public Spline(PolynomialFunc px, PolynomialFunc py, PolynomialFunc pz) {
