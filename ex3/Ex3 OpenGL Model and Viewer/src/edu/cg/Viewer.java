@@ -131,8 +131,9 @@ public class Viewer implements GLEventListener {
 
         gl.glEnable(GL2.GL_NORMALIZE);
         gl.glEnable(GL2.GL_DEPTH_TEST);
-        gl.glLightModelf(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
-        gl.glEnable(GL2.GL_LIGHTING);
+        //TODO: Uncomment when implementing lighting
+//        gl.glLightModelf(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
+//        gl.glEnable(GL2.GL_LIGHTING);
 
         model.init(gl);
 
