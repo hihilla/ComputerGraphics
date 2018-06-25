@@ -68,11 +68,12 @@ public class Mesila {
 
         double[] polynomialFuncs = solveEquation(constraints);
         CyclicList<PolynomialFunc> cyclicPolynomials = new CyclicList<PolynomialFunc>();
-        for (int i = 0; i < polynomialFuncs.length;) {
-            PolynomialFunc p = new PolynomialFunc(polynomialFuncs[i++],
-                    polynomialFuncs[i++],
-                    polynomialFuncs[i++],
-                    polynomialFuncs[i++]);
+        for (int i = 0; i < polynomialFuncs.length; i += 4) {
+            int j = i;
+            PolynomialFunc p = new PolynomialFunc(polynomialFuncs[j++],
+                    polynomialFuncs[j++],
+                    polynomialFuncs[j++],
+                    polynomialFuncs[j++]);
             cyclicPolynomials.add(p);
         }
 

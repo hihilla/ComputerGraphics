@@ -113,6 +113,8 @@ public class Track implements IRenderable {
 	}
 
 	private void renderField(GL2 gl) {
+		gl.glPushMatrix();
+
 		gl.glEnable(GL2.GL_TEXTURE_2D);
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, texGrass.getTextureObject());
 		
@@ -143,9 +145,11 @@ public class Track implements IRenderable {
 			gl.glEnable(GL2.GL_LIGHTING);
 		
 		gl.glDisable(GL2.GL_TEXTURE_2D);
+		gl.glPopMatrix();
 	}
 
 	private void renderTrack(GL2 gl) {
+		gl.glPushMatrix();
 		gl.glEnable(GL2.GL_TEXTURE_2D);
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
@@ -184,9 +188,11 @@ public class Track implements IRenderable {
 		
 		gl.glDisable(GL2.GL_BLEND);
 		gl.glDisable(GL2.GL_TEXTURE_2D);
+		gl.glPopMatrix();
 	}
 
 	private void drawTrackTriangle(GL2 gl, LocationOnMesila l0, LocationOnMesila l1) {
+		gl.glPushMatrix();
 		Vec tcn0 = l0.tangentCrossNromal();
 		Vec tcn1 = l1.tangentCrossNromal();
 		Point p1 = l0.position.add(tcn0.mult(0.05));
@@ -246,6 +252,8 @@ public class Track implements IRenderable {
 		gl.glTexCoord2d(1, 1);
 		fb = p3.floatBuffer();
 		gl.glVertex3fv(fb);
+
+		gl.glPopMatrix();
 	}
 
 	@SuppressWarnings("unchecked")

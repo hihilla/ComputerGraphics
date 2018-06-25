@@ -5,7 +5,6 @@ public class PolynomialFunc {
 
     PolynomialFunc() {
         a = b = c = d = 0;
-
     }
 
     public PolynomialFunc(double a, double b, double c, double d) {

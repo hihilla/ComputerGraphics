@@ -36,16 +36,14 @@ public class Constraint {
     public double[] Ai() {
         int sizeAi = this.length * 4;
         double[] Ai = new double[sizeAi];
-        int index = this.i * 4;
-        Ai[index++] = this.a1;
-        Ai[index++] = this.b1;
-        Ai[index++] = this.c1;
-        Ai[index++] = this.d1;
-        index %= sizeAi;
-        Ai[index++] = this.a2;
-        Ai[index++] = this.b2;
-        Ai[index++] = this.c2;
-        Ai[index++] = this.d2;
+        double[] components = {a1, b1, c1, d1, a2, b2, c2, d2};
+        int index = (this.i * 4);
+        for (int i = 0; i < components.length; i++) {
+            Ai[index] = components[i];
+            index++;
+            index %= sizeAi;
+        }
+
         return Ai;
     }
 

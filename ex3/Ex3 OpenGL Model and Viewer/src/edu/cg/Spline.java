@@ -28,7 +28,7 @@ public  class Spline {
     }
 
     public Point point(double t) {
-        return new Point(polyFuncs[0].calc(t), polyFuncs[1].calc(t), polyFuncs[1].calc(t));
+        return new Point(polyFuncs[0].calc(t), polyFuncs[1].calc(t), polyFuncs[2].calc(t));
     }
 
     // 𝑡𝑎𝑛𝑔𝑒𝑛𝑡(𝑓𝑖(𝑡))=𝑓𝑖′(𝑡)=(𝑥𝑖′(𝑡),𝑦𝑖′(𝑡),𝑧𝑖′(𝑡))
