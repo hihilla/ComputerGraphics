@@ -19,14 +19,12 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLJPanel;
 
-import edu.cg.models.Empty;
-import edu.cg.models.IRenderable;
-import edu.cg.models.Track;
+import edu.cg.models.*;
 
 
 public class Main {
 
-	static IRenderable[] models = {new Track(), new Empty()};
+	static IRenderable[] models = {new Track(), new Locomotive(), new Track(new Netta())};
 	static Point prevMouse;
 	static int currentModel;
 	static Frame frame;

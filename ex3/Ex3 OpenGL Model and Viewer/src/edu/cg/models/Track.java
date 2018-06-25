@@ -5,10 +5,7 @@ import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
-import edu.cg.CyclicList;
-import edu.cg.LocationOnMesila;
-import edu.cg.Mesila;
-import edu.cg.TrackPoints;
+import edu.cg.*;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Vec;
 
@@ -305,14 +302,16 @@ public class Track implements IRenderable {
         Mesila mesila = mesilot.get(numOfMesila);
         LocationOnMesila locationOnMesila = mesila.locationOnMesila(t);
 
-        Point eye = locationOnMesila.position;
         Vec up = locationOnMesila.normal;
-        Vec newNormal = up.mult(0.25);
-        Vec tangent = locationOnMesila.tangent.mult(-0.25);
-        Vec tangentCrossNormal = locationOnMesila.tangentCrossNromal().mult(-0.25);
+        Vec newNormal = up.mult(.3);
+        Vec tangent = locationOnMesila.tangent.mult(-.25);
+        Vec tangentCrossNormal = locationOnMesila.tangentCrossNromal().mult(-.2);
 
-        Point center = eye.add(tangent);
-        eye = eye.add(tangent.add(newNormal).add(tangentCrossNormal));
+        Point location = locationOnMesila.position;
+
+        Point center = location.add(locationOnMesila.tangent);
+
+        Point eye = location.add(tangentCrossNormal).add(tangent).add(newNormal);
 
         GLU glu = new GLU();
         glu.gluLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, up.x, up.y, up.z);

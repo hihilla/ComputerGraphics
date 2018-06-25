@@ -217,7 +217,7 @@ public class Viewer implements GLEventListener {
     }
 
     public void toggleModelCamera() {
-        isModelCamera =! isModelCamera;
+        isModelCamera = !isModelCamera;
         glPanel.repaint();
     }
 
